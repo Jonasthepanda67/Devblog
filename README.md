@@ -35,4 +35,4 @@ Welcome to my **Devblog** project. This is a school project that i have worked o
 - Added Bootstrap
  
 ## 🔗 Tags & Links
-[View Tags](https://github.com/Jonasthepanda67/Devblog_Portfolio/tags)
+[View Tags](https://github.com/Jonasthepanda67/Devblog/tags)
