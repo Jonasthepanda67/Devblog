@@ -1,3 +1,5 @@
+using Devblog_Library.Interfaces;
+using Devblog_Library.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
