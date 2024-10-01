@@ -1,10 +1,44 @@
 ﻿@page
+<!--@using DevBlog_Portfolio_Library.Interfaces
+@using DevBlog_Portfolio_Library.Models-->
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Devblog";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<body>
+    <h3>Devblog</h3>
+    <div class="col mt-1">
+        <!--@for (int i = 0; i < Model.Posts.Count + 1;)
+        {
+            int blogPostNumber = 0, reviewPostNumber = 0;
+            /*if (Model.BlogPosts[blogPostNumber].Date > Model.ReviewPosts[reviewPostNumber].Date)
+            {
+                <div class="">
+                    <div class="">
+                        <h3>@Model.BlogPosts[blogPostNumber].Title</h3>
+                        <p>@Model.BlogPosts[blogPostNumber].Date</p>
+                        <p>@Model.BlogPosts[blogPostNumber].Weblog</p>
+                        <a href="@Model.BlogPosts[blogPostNumber].Reference">Link to Project</a>
+                    </div>
+                </div>
+                blogPostNumber++;
+            }
+            else
+            {
+                <div class="">
+                    <div class="">
+                        <h3>@Model.ReviewPosts[reviewPostNumber].Title</h3>
+                        <p>@Model.ReviewPosts[reviewPostNumber].Date</p>
+                        <p>@Model.ReviewPosts[reviewPostNumber].Pros</p>
+                        <p>@Model.ReviewPosts[reviewPostNumber].Cons</p>
+                        <p>@Model.ReviewPosts[reviewPostNumber].Stars<img src="~/star.png" alt="Star-image" class="review-image" /></p>
+                        <a href="@Model.ReviewPosts[reviewPostNumber].Reference">Link to Project</a>
+                    </div>
+                </div>
+                reviewPostNumber++;
+            }
+            i++;*/
+        }-->
+    </div>
+</body>
