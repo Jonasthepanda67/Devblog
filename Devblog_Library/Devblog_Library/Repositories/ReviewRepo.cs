@@ -13,6 +13,10 @@ namespace Devblog_Library.Repositories
         public Review CreatePost(string title, string reference, string description, string content, short stars)
         {
             Review post = new Review(title, reference, PostType.Review, description, content, stars);
+            using (StreamWriter writer = new StreamWriter(@"c:\testfile.txt", append: true))
+            {
+                writer.WriteLine($"{title}|{reference}|{description}|{content}|{stars}");
+            }
             return post;
         }
     }

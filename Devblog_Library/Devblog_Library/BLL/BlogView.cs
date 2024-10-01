@@ -72,6 +72,20 @@ namespace Devblog_Library.BLL
             return viewList;
         }
 
+        public List<IPost> LoadListOfPosts() //Fix
+        {
+            using (StreamReader reader = new StreamReader(@"c:\testfile.txt"))
+            {
+                while (!reader.EndOfStream)
+                {
+                    string line = reader.ReadLine();
+                    string[] values = line.Split("|");
+                    IPost post = new IPost(values[0], values[1], values[2]);
+                    _posts.Add(post);
+                }
+            }
+        }
+
         public void RemoveTag(Tag tag, Post post)
         {
             post.Tags.ListOfTags.Remove(tag);

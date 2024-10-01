@@ -1,80 +1,53 @@
 using Devblog_Library.Interfaces;
+using Devblog_Library.Models;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace Devblog.Pages
 {
     public class LoginModel : PageModel
     {
-        /*private readonly SqlConnection con;
+        private readonly IConfiguration configuration;
 
-        public AdminModel(IConfiguration configuration)
+        public LoginModel(IConfiguration configuration)
         {
-            string conStr = configuration.GetConnectionString("MainConnection");
-            con = new SqlConnection(conStr);
-        }*/
-        private readonly ILogin _login;
-        private readonly IPersonRepo _personRepo;
-
-        public LoginModel(ILogin login, IPersonRepo personRepo)
-        {
-            _login = login;
-            _personRepo = personRepo;
+            this.configuration = configuration;
         }
 
         [BindProperty]
         public string UserName { get; set; }
 
-        [BindProperty]
-        private string PassWord { get; set; }
+        [BindProperty, DataType(DataType.Password)]
+        public string Password { get; set; }
 
-        public bool ShowModal { get; set; }
+        public string Message { get; set; }
 
         //Activates when the form is submitted
-        public async Task<IActionResult> OnPost(string returnUrl = null, string logout = null)
+        public async Task<IActionResult> OnPost()
         {
-            if (logout != null)
+            var user = configuration.GetSection("SiteUser").Get<SiteUser>();
+
+            if (UserName == user.UserName)
             {
-                HttpContext.Session.Remove("User");
-                if (string.IsNullOrEmpty(returnUrl))
+                var passwordHasher = new PasswordHasher<string>();
+                if (passwordHasher.VerifyHashedPassword(null, user.Password, Password) == PasswordVerificationResult.Success)
                 {
-                    returnUrl = "/Login"; // Default to login page
-                }
-                return LocalRedirect(returnUrl);
-            }
-            else
-            {
-                UserName = Request.Form["Username"];
-                PassWord = Request.Form["Password"];
-
-                _personRepo.LoadListOfPeople();
-
-                /*con.Open();
-                SqlCommand cmd = new("SELECT Username FROM dbo.Login WHERE Username = @Username AND Password = @Password", con);
-                cmd.Parameters.AddWithValue("@Username", UserName);
-                cmd.Parameters.AddWithValue("@Password", PassWord);
-                var Result = (string)cmd.ExecuteScalar();
-                con.Close();*/
-
-                bool Result = _login.CheckLogin(UserName, PassWord);
-
-                if (Result)
-                {
-                    HttpContext.Session.SetString("User", UserName);
-                    TempData["result"] = Result;
-                    if (string.IsNullOrEmpty(returnUrl))
+                    var claims = new List<Claim>
                     {
-                        returnUrl = "/"; // Default to home page
-                    }
-                    return LocalRedirect(returnUrl);
-                }
-                else
-                {
-                    ShowModal = true;
-                    TempData["ModalMessage"] = "Invalid login attempt.";
-                    return Page();
+                        new Claim(ClaimTypes.Name, UserName)
+                    };
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+                    return RedirectToPage("/admin/index");
                 }
             }
+            Message = "Invalid attempt";
+            return Page();
         }
     }
 }
