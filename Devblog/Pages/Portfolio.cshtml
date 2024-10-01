@@ -1,0 +1,101 @@
+﻿@page
+@using Devblog_Library.Models
+@model Devblog.Pages.PortfolioModel
+@{
+    ViewData["Title"] = "Portfolio";
+}
+
+<body>
+    <div class="portfolio-container">
+        <div class="projects-section">
+            <h2>Projects</h2>
+            <div class="project-grid">
+                @foreach (Project post in Model.Projects)
+                {
+                    <div class="project-card">
+                        <img src="@post.Image" alt="ProjectImage" class="project-image" />
+                        <div class="project-info">
+                            <h3>@post.Title</h3>
+                            <p>@post.Date</p>
+                            <p>@post.Description</p>
+                            <a href="@post.Reference">Link to Project</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</body>
+
+<style>
+    .body {
+        background-color: #EDEAE0;
+        color: #4A4A4A;
+    }
+
+    .portfolio-container {
+        background-color: #FAF3E0;
+        width: 80%;
+        margin: 0 auto;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .projects-section {
+        margin-top: 20px;
+    }
+
+        .projects-section h2 {
+            text-align: center;
+            color: #3C763D;
+            margin-bottom: 40px;
+        }
+
+    .project-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    .project-card {
+        background-color: #824214;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        transition: transform 0.2s, box-shadow 0.2s;
+        text-align: center;
+    }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+    .project-photo {
+        width: 100%;
+        max-width: 300px;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .project-info {
+        padding: 20px;
+    }
+
+        .project-info h3 {
+            margin-top: 0;
+            color: #3C763D;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .project-info p {
+            color: #616161;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+</style>
