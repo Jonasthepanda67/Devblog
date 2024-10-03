@@ -40,25 +40,33 @@
                 @foreach (var post in Model.Posts)
                 {
                     <div class="col-md-4 mb-4 post-card" data-posttype="@post.Type.ToString()">
-                        <div class="card shadow-sm h-100 @((post.IsDeleted ? "soft-deleted" : ""))">
+                        <div class="card shadow-sm h-100">
                             <div class="card-body">
                                 <h5 class="card-title @((post.IsDeleted ? "text-decoration-line-through" : ""))">@post.Title</h5>
                                 <p class="card-text"><strong>Date:</strong> @post.Date.ToShortDateString()</p>
                                 <p class="card-text"><strong>Type:</strong> @post.Type.ToString()</p>
                                 <div class="d-flex justify-content-between">
-                                    <a class="btn btn-success" asp-page="/Admin/PostDetails" asp-route-id="@post.Id">View More</a>
-                                    <a class="btn btn-warning" asp-page="/Admin/Edit" asp-route-id="@post.Id" asp-route-type="Post">Edit</a>
-
-                                    <!-- Soft Delete Button -->
-                                    @if (!post.IsDeleted)
+                                    @if (post.IsDeleted)
                                     {
-                                        <form method="post" asp-page-handler="SoftDelete" asp-route-id="@post.Id" style="display:inline;">
-                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        <!-- Restore Button -->
+                                        <form method="post" asp-page-handler="Restore" asp-route-id="@post.Id" style="display:inline;">
+                                            <button type="submit" class="btn btn-success">Restore</button>
+                                        </form>
+                                        <!-- Permanent Delete Button -->
+                                        <form method="post" asp-page-handler="PermanentDelete" asp-route-id="@post.Id" style="display:inline;">
+                                            <button type="submit" class="btn btn-danger">Permanent Delete</button>
                                         </form>
                                     }
                                     else
                                     {
-                                        <button type="button" class="btn btn-danger" disabled>Deleted</button>
+                                        <!-- Original buttons -->
+                                        <a class="btn btn-success" asp-page="/Admin/PostDetails" asp-route-id="@post.Id">View More</a>
+                                        <a class="btn btn-warning" asp-page="/Admin/Edit" asp-route-id="@post.Id" asp-route-type="Post">Edit</a>
+
+                                        <!-- Soft Delete Button -->
+                                        <form method="post" asp-page-handler="SoftDelete" asp-route-id="@post.Id" style="display:inline;">
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
                                     }
                                 </div>
                             </div>

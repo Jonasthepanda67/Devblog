@@ -54,9 +54,10 @@ namespace Devblog_Library.BLL
             return post;
         }
 
-        public void DeletePost(Post post) //if you have the time then make a soft delete function and then a list over soft deleted items that can then be hard deleted or undone
+        public void DeletePost(IPost post)
         {
-            post.IsDeleted = true;
+            _posts.Remove(post); // Remove the post from the list
+            SavePostsToFile(); // Save changes to file
         }
 
         public List<IPost> GetListOfPosts(PostType type)

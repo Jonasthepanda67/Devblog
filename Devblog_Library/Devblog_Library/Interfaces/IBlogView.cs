@@ -17,7 +17,7 @@ namespace Devblog_Library.Interfaces
 
         public Post UpdatePost(Post post, string NewTitle, string NewReference);
 
-        public void DeletePost(Post post);
+        public void DeletePost(IPost post);
 
         public List<IPost> GetListOfPosts(PostType type);
 

@@ -46,5 +46,24 @@ namespace Devblog.Pages.Admin
 
             return RedirectToPage(); // Redirect back to the index page
         }
+
+        public IActionResult OnPostRestore(Guid id)
+        {
+            // Restore the post by its ID
+            _blogView.RestorePost(id); // Restore the post
+            return RedirectToPage(); // Redirect back to the index page
+        }
+
+        public IActionResult OnPostPermanentDelete(Guid id)
+        {
+            // Find the post and remove it from the list
+            IPost post = _blogView.GetPostById(id, _blogView.LoadListOfPosts());
+            if (post != null)
+            {
+                _blogView.DeletePost(post); // Mark as deleted
+                _blogView.SavePostsToFile(); // Save changes to file
+            }
+            return RedirectToPage(); // Redirect back to the index page
+        }
     }
 }
