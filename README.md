@@ -15,10 +15,10 @@ Welcome to my **Devblog** project. This is a school project that i have worked o
 - [X] Set up Dependency Injection
 - [X] Add Unit Test
 - [X] Use Bootstrap for front-end
-- [ ] Add Login Feature
+- [X] Add Login Feature
 - [ ] Create and use a database for all data
-- [ ] Add an admin panel for handling posts
-- [ ] Use CRUD for handling posts
+- [X] Add an admin panel for handling posts
+- [X] Use CRUD for handling posts
 - [ ] Add Users and Comments as a feature
  
 ## 🚧 Known Issues
@@ -28,6 +28,12 @@ Welcome to my **Devblog** project. This is a school project that i have worked o
 *Bug reporting isn't currently enabled for this project. If you encounter any issues, feel free to download the project and make your own improvements!*  
  
 ## 📜 Changelog
+
+### **V1.1.0**
+- Added an Admin Panel with a login for the author of the website to use
+- Added CRUD pages for handling posts, tags etc.
+- Implemented Create Post function
+- Implemented a few QOL functions like GetPostById and LoadListOfPosts
  
 ### **V1.0.0**
 - Added Class models, Repositories and Interfaces
