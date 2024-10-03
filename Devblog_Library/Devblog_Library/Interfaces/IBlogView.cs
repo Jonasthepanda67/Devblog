@@ -17,7 +17,7 @@ namespace Devblog_Library.Interfaces
 
         public Post UpdatePost(Post post, string NewTitle, string NewReference);
 
-        public void DeletePost(IPost post);
+        public void DeletePost(Guid id);
 
         public List<IPost> GetListOfPosts(PostType type);
 
@@ -26,8 +26,6 @@ namespace Devblog_Library.Interfaces
         public void RemoveTag(Tag tag, Post post);
 
         public void SoftDeletePost(Guid id);
-
-        public Task SaveChangesAsync();
 
         public void RestorePost(Guid id);
 

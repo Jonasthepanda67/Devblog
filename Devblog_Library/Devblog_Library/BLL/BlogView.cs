@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Devblog_Library.BLL
@@ -54,10 +55,37 @@ namespace Devblog_Library.BLL
             return post;
         }
 
-        public void DeletePost(IPost post)
+        public void DeletePost(Guid id)
         {
-            _posts.Remove(post); // Remove the post from the list
-            SavePostsToFile(); // Save changes to file
+            string line = null;
+            string lineToDelete = id.ToString();
+
+            // Remove the post from the in-memory list
+            _posts.Remove(_posts.Find(post => post.Id == id));
+
+            // File paths
+            string originalFilePath = @"C:\Users\U427797\OneDrive - Danfoss\Desktop\testfile.txt";
+            string tempFilePath = @"C:\Users\U427797\OneDrive - Danfoss\Desktop\tempfile.txt";
+
+            // Using a temporary file to avoid simultaneous access to the same file
+            using (StreamReader reader = new StreamReader(originalFilePath))
+            {
+                using (StreamWriter writer = new StreamWriter(tempFilePath))
+                {
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        // Write lines to the temporary file except for the line to delete
+                        if (String.Compare(line, lineToDelete) == 0)
+                            continue;
+
+                        writer.WriteLine(line);
+                    }
+                }
+            }
+
+            // Replace the original file with the temp file
+            System.IO.File.Delete(originalFilePath);  // Delete the original file
+            System.IO.File.Move(tempFilePath, originalFilePath);  // Rename temp file to original
         }
 
         public List<IPost> GetListOfPosts(PostType type)
@@ -80,7 +108,7 @@ namespace Devblog_Library.BLL
             if (post != null)
             {
                 post.IsDeleted = true;
-                SavePostsToFile(); // Save changes to file
+                SavePostsToFile();
             }
         }
 
@@ -90,7 +118,7 @@ namespace Devblog_Library.BLL
             if (post != null)
             {
                 post.IsDeleted = false;
-                SavePostsToFile(); // Save changes to file
+                SavePostsToFile();
             }
         }
 
@@ -111,30 +139,6 @@ namespace Devblog_Library.BLL
                     else if (post is Project project)
                     {
                         writer.WriteLine($"Project|{project.Date}|{project.Id}|{project.Title}|{project.Reference}|{project.Description}|{project.Image}|{(post.IsDeleted ? "true" : "false")}");
-                    }
-                }
-            }
-        }
-
-        public async Task SaveChangesAsync()
-        {
-            // Assume you have a method to write the posts back to the file.
-            using (StreamWriter writer = new StreamWriter(@"C:\Users\U427797\OneDrive - Danfoss\Desktop\testfile.txt", false)) // Overwrite the file
-            {
-                foreach (var post in _posts)
-                {
-                    // Write each post based on its type and include the IsDeleted status
-                    if (post is BlogPost blogPost)
-                    {
-                        await writer.WriteLineAsync($"BlogPost|{blogPost.Date}|{blogPost.Id}|{blogPost.Title}|{blogPost.Reference}|{blogPost.Weblog}|{blogPost.IsDeleted}");
-                    }
-                    else if (post is Review reviewPost)
-                    {
-                        await writer.WriteLineAsync($"Review|{reviewPost.Date}|{reviewPost.Id}|{reviewPost.Title}|{reviewPost.Reference}|{reviewPost.Pros}|{reviewPost.Cons}|{reviewPost.Stars}|{reviewPost.IsDeleted}");
-                    }
-                    else if (post is Project projectPost)
-                    {
-                        await writer.WriteLineAsync($"Project|{projectPost.Date}|{projectPost.Id}|{projectPost.Title}|{projectPost.Reference}|{projectPost.Description}|{projectPost.Image}|{projectPost.IsDeleted}");
                     }
                 }
             }

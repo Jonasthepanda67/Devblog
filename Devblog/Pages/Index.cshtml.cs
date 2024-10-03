@@ -19,15 +19,11 @@ namespace Devblog.Pages
 
         public void OnGet()
         {
-            Posts = _blogView.LoadListOfPosts();
-            foreach (IPost post in Posts)
-            {
-                if (post.Type == PostType.Project)
-                {
-                    Posts.Remove(post);
-                }
-            }
-            Posts = Posts.OrderBy(p => p.Date).ToList();
+            // Load the list of posts and exclude Project type directly using LINQ
+            Posts = _blogView.LoadListOfPosts()
+                            .Where(post => post.Type != PostType.Project)
+                            .OrderByDescending(p => p.Date) // Order by date (newest first)
+                            .ToList();
         }
     }
 }

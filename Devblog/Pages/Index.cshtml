@@ -3,21 +3,171 @@
 @using Devblog_Library.Models
 @model IndexModel
 @{
-    var postTypes = Enum.GetNames(typeof(PostType));
     ViewData["Title"] = "Devblog";
 }
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+
+    <style>
+        /* Card Design */
+        .post-card {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+            /* Hover effect */
+            .post-card:hover {
+                background-color: #ffffff;
+                transform: translateY(-5px);
+                box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+            }
+
+        /* Title and date styling */
+        .post-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .post-date {
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        /* Post Reference link */
+        .post-reference {
+            font-size: 1.1rem;
+            color: #007bff;
+            text-decoration: none;
+            margin-bottom: 10px;
+        }
+
+            .post-reference:hover {
+                text-decoration: underline;
+            }
+
+        /* Post content styling */
+        .post-content {
+            margin-top: 10px;
+            font-size: 1.1rem;
+        }
+
+        /* Weblog styling */
+        .weblog {
+            background-color: #e8f0fe;
+            border-left: 5px solid #2196f3;
+            padding: 15px;
+            font-style: italic;
+            font-size: 1.1rem;
+            color: #444;
+            margin-top: 15px;
+            border-radius: 8px;
+        }
+
+        /* Pros and Cons blocks */
+        .pros, .cons {
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .pros {
+            background-color: #e0f7e0;
+            border-left: 5px solid #28a745;
+        }
+
+        .cons {
+            background-color: #f8d7da;
+            border-left: 5px solid #dc3545;
+        }
+
+        /* Star rating */
+        .star-rating i {
+            margin-right: 2px;
+            color: #ffc107;
+        }
+
+        /* Add some vibrant colors */
+        body {
+            background-color: #f0f4f8;
+        }
+
+        .container {
+            padding-top: 20px;
+        }
+
+        .post-title, .pros strong, .cons strong {
+            color: #ff5722; /* Vibrant orange for titles */
+        }
+    </style>
+</head>
 <body>
-    <h3>Devblog</h3>
-    <div class="container mt-4">
-        <div id="postContainer" class="row">
+    <div class="container">
+        <h1 class="text-center mb-5" style="color: #052eb3;">Developer Blog</h1>
+
+        <div class="row">
             @foreach (var post in Model.Posts)
             {
-                <div class="post-preview">
-                    <h3>@post.Title</h3>
-                    <p>@post.Date.ToShortDateString()</p>
+                <div class="col-lg-12">
+                    <div class="post-card">
+                        <!-- Common Title and Date for all post types -->
+                        <h2 class="post-title">@post.Title</h2>
+                        <p class="post-date">@post.Date.ToString("MMMM dd, yyyy")</p>
+
+                        <!-- Post Reference -->
+                        <a href="@post.Reference" class="post-reference" target="_blank">Reference: @post.Reference</a>
+
+                        <!-- Render BlogPost or Review based on post type -->
+                        <div class="post-content">
+                            @if (post is BlogPost blogPost)
+                            {
+                                <!-- Weblog section styled as a project update/log -->
+                                <div class="weblog">
+                                    <p>@blogPost.Weblog</p>
+                                </div>
+                            }
+                            else if (post is Review review)
+                            {
+                                <!-- Review specific content -->
+                                <div class="pros">
+                                    <strong>Pros:</strong>
+                                    <p>@review.Pros</p>
+                                </div>
+                                <div class="cons">
+                                    <strong>Cons:</strong>
+                                    <p>@review.Cons</p>
+                                </div>
+
+                                <!-- Star rating -->
+                                <div class="star-rating">
+                                    @for (var i = 0; i < review.Stars; i++)
+                                    {
+                                        <i class="fas fa-star"></i>
+                                    }
+                                    @for (var i = review.Stars; i < 5; i++)
+                                    {
+                                        <i class="far fa-star"></i>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
                 </div>
             }
         </div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
 </body>
+</html>

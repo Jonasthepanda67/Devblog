@@ -60,7 +60,7 @@ namespace Devblog.Pages.Admin
             IPost post = _blogView.GetPostById(id, _blogView.LoadListOfPosts());
             if (post != null)
             {
-                _blogView.DeletePost(post); // Mark as deleted
+                _blogView.DeletePost(id);
                 _blogView.SavePostsToFile(); // Save changes to file
             }
             return RedirectToPage(); // Redirect back to the index page
