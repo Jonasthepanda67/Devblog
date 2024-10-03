@@ -18,6 +18,7 @@ namespace Devblog.Pages
 
         public void OnGet()
         {
+            _blogView.LoadListOfPosts();
             Projects = _blogView.GetListOfPosts(PostType.Project);
         }
     }

@@ -72,18 +72,37 @@ namespace Devblog_Library.BLL
             return viewList;
         }
 
-        public List<IPost> LoadListOfPosts() //Fix
+        public List<IPost> LoadListOfPosts()
         {
-            using (StreamReader reader = new StreamReader(@"c:\testfile.txt"))
+            List<IPost> _posts = new List<IPost>();
+            using (StreamReader reader = new StreamReader(@"C:\Users\U427797\OneDrive - Danfoss\Desktop\testfile.txt"))
             {
                 while (!reader.EndOfStream)
                 {
                     string line = reader.ReadLine();
                     string[] values = line.Split("|");
-                    IPost post = new IPost(values[0], values[1], values[2]);
-                    _posts.Add(post);
+
+                    if (values[0] == "BlogPost")
+                    {
+                        BlogPost post = new BlogPost(values[2], values[3], PostType.BlogPost, values[4]);
+                        post.Date = DateTime.Parse(values[1]);
+                        _posts.Add(post);
+                    }
+                    else if (values[0] == "Review")
+                    {
+                        Review post = new Review(values[2], values[3], PostType.Review, values[4], values[5], short.Parse(values[6]));
+                        post.Date = DateTime.Parse(values[1]);
+                        _posts.Add(post);
+                    }
+                    else if (values[0] == "Project")
+                    {
+                        Project post = new Project(values[2], values[3], PostType.Project, values[4], values[5]);
+                        post.Date = DateTime.Parse(values[1]);
+                        _posts.Add(post);
+                    }
                 }
             }
+            return _posts;
         }
 
         public void RemoveTag(Tag tag, Post post)
@@ -104,6 +123,11 @@ namespace Devblog_Library.BLL
                 _personRepo.LoadListOfPeople();
                 SetAuthor();
             }
+        }
+
+        public IPost GetPostById(Guid id)
+        {
+            return _posts.FirstOrDefault(post => post.Id == id);
         }
     }
 }

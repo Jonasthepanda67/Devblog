@@ -13,9 +13,9 @@ namespace Devblog_Library.Repositories
         public BlogPost CreatePost(string title, string reference, string description, string content = "", short stars = 0)
         {
             BlogPost post = new BlogPost(title, reference, PostType.BlogPost, description);
-            using (StreamWriter writer = new StreamWriter(@"c:\testfile.txt", append: true))
+            using (StreamWriter writer = new StreamWriter(@"C:\Users\U427797\OneDrive - Danfoss\Desktop\testfile.txt", append: true))
             {
-                writer.WriteLine($"{title}|{reference}|{description}");
+                writer.WriteLine($"BlogPost|{DateTime.Now.Date}|{title}|{reference}|{description}");
             }
             return post;
         }

@@ -3,42 +3,21 @@
 @using Devblog_Library.Models
 @model IndexModel
 @{
+    var postTypes = Enum.GetNames(typeof(PostType));
     ViewData["Title"] = "Devblog";
 }
 
 <body>
     <h3>Devblog</h3>
-    <div class="col mt-1">
-        @* @for (int i = 0; i < Model.Posts.Count + 1;)
-        {
-            int blogPostNumber = 0, reviewPostNumber = 0;
-            /*if (Model.BlogPosts[blogPostNumber].Date > Model.ReviewPosts[reviewPostNumber].Date)
+    <div class="container mt-4">
+        <div id="postContainer" class="row">
+            @foreach (var post in Model.Posts)
             {
-                <div class="">
-                    <div class="">
-                        <h3>@Model.BlogPosts[blogPostNumber].Title</h3>
-                        <p>@Model.BlogPosts[blogPostNumber].Date</p>
-                        <p>@Model.BlogPosts[blogPostNumber].Weblog</p>
-                        <a href="@Model.BlogPosts[blogPostNumber].Reference">Link to Project</a>
-                    </div>
+                <div class="post-preview">
+                    <h3>@post.Title</h3>
+                    <p>@post.Date.ToShortDateString()</p>
                 </div>
-                blogPostNumber++;
             }
-            else
-            {
-                <div class="">
-                    <div class="">
-                        <h3>@Model.ReviewPosts[reviewPostNumber].Title</h3>
-                        <p>@Model.ReviewPosts[reviewPostNumber].Date</p>
-                        <p>@Model.ReviewPosts[reviewPostNumber].Pros</p>
-                        <p>@Model.ReviewPosts[reviewPostNumber].Cons</p>
-                        <p>@Model.ReviewPosts[reviewPostNumber].Stars<img src="~/star.png" alt="Star-image" class="review-image" /></p>
-                        <a href="@Model.ReviewPosts[reviewPostNumber].Reference">Link to Project</a>
-                    </div>
-                </div>
-                reviewPostNumber++;
-            }
-            i++;*/
-        } *@
+        </div>
     </div>
 </body>

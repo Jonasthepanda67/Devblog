@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devblog", "Devblog\Devblog.csproj", "{D23F23E2-6F89-44CD-8F7E-F3B04DCE03EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devblog", "Devblog\Devblog.csproj", "{D23F23E2-6F89-44CD-8F7E-F3B04DCE03EA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devblog_Library", "Devblog_Library\Devblog_Library\Devblog_Library.csproj", "{1AB9BEB9-7A88-4930-9E42-46294CD59631}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Devblog_UnitTest", "Devblog_UnitTest\Devblog_UnitTest.csproj", "{CE4A81B3-4D57-4421-8CA2-CE4F872CA845}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Devblog_UnitTest", "Devblog_UnitTest\Devblog_UnitTest.csproj", "{CE4A81B3-4D57-4421-8CA2-CE4F872CA845}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

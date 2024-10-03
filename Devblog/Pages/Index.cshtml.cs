@@ -15,29 +15,19 @@ namespace Devblog.Pages
             _blogView = blogView;
         }
 
-        public List<Review> ReviewPosts { get; set; } = [];
-        public List<BlogPost> BlogPosts { get; set; } = [];
         public List<IPost> Posts { get; set; } = [];
 
         public void OnGet()
         {
-            Posts = _blogView.GetListOfPosts(PostType.BlogPost);
-            foreach (IPost post in _blogView.GetListOfPosts(PostType.Review))
+            Posts = _blogView.LoadListOfPosts();
+            foreach (IPost post in Posts)
             {
-                Posts = Posts.Append(post).ToList();
+                if (post.Type == PostType.Project)
+                {
+                    Posts.Remove(post);
+                }
             }
             Posts = Posts.OrderBy(p => p.Date).ToList();
-
-            foreach (BlogPost blogPost in Posts.OfType<BlogPost>())
-            {
-                BlogPosts.Add(blogPost);
-            }
-            BlogPosts = BlogPosts.OrderBy(p => p.Date).ToList();
-            foreach (Review review in Posts.OfType<Review>())
-            {
-                ReviewPosts.Add(review);
-            }
-            ReviewPosts = ReviewPosts.OrderBy(p => p.Date).ToList();
         }
     }
 }
