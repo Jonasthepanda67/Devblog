@@ -19,6 +19,7 @@ Welcome to my **Devblog** project. This is a school project that i have worked o
 - [ ] Create and use a database for all data
 - [X] Add an admin panel for handling posts
 - [X] Use CRUD for handling posts
+- [X] Implement a soft delete function
 - [ ] Add Users and Comments as a feature
  
 ## 🚧 Known Issues
@@ -28,6 +29,13 @@ Welcome to my **Devblog** project. This is a school project that i have worked o
 *Bug reporting isn't currently enabled for this project. If you encounter any issues, feel free to download the project and make your own improvements!*  
  
 ## 📜 Changelog
+
+### **V1.2.0**
+- Added a soft delete function
+- Designed cards for displayed blogpost and review and changing it a bit for displaying projects
+- Implemented CRUD functions
+- Fixed login to work across all pages
+- Added and fixed a filter function for the admin index page
 
 ### **V1.1.0**
 - Added an Admin Panel with a login for the author of the website to use
