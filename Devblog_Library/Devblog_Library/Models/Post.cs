@@ -11,7 +11,7 @@ namespace Devblog_Library.Models
 {
     public abstract class Post : IPost
     {
-        public Guid Id { get; init; }
+        public Guid Id { get; set; } //change to init when using a database
         public string Title { get; set; }
         public string Reference { get; set; }
         public DateTime Date { get; set; }

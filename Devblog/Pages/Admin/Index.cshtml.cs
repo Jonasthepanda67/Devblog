@@ -1,9 +1,9 @@
 using Devblog_Library.Interfaces;
+using Devblog_Library.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Collections.Generic;
-using Devblog_Library.Models;
+using System.Threading.Tasks;
 
 namespace Devblog.Pages.Admin
 {
@@ -13,16 +13,38 @@ namespace Devblog.Pages.Admin
         private readonly IBlogView _blogView;
 
         public List<IPost> Posts { get; set; }
+        public List<Tag> Tags { get; set; }
+        public string SelectedPostType { get; set; }
 
         public IndexModel(IBlogView blogView)
         {
             _blogView = blogView;
             Posts = new List<IPost>();
+            Tags = new List<Tag>();
         }
 
-        public void OnGet()
+        public void OnGet(string postType = "All")
+        {
+            LoadPosts(postType);
+        }
+
+        private void LoadPosts(string postType)
         {
             Posts = _blogView.LoadListOfPosts();
+            Tags = _blogView.LoadListOfTags();
+
+            if (postType != "All")
+            {
+                Posts = Posts.Where(p => p.Type.ToString() == postType && !p.IsDeleted).ToList();
+            }
+        }
+
+        public IActionResult OnPostSoftDeleteAsync(Guid id)
+        {
+            // Soft delete the post by its ID
+            _blogView.SoftDeletePost(id); // Soft delete the post by its ID
+
+            return RedirectToPage(); // Redirect back to the index page
         }
     }
 }

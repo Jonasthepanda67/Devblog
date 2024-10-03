@@ -1,0 +1,66 @@
+﻿body {
+    font-family: Arial, sans-serif;
+}
+
+.slider-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+}
+
+.toggle-slider {
+    display: none;
+}
+
+.slider-label {
+    width: 100px;
+    height: 25px;
+    background-color: #ccc;
+    border-radius: 25px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+    .slider-label::after {
+        content: '';
+        width: 23px;
+        height: 23px;
+        background-color: white;
+        border-radius: 50%;
+        position: absolute;
+        top: 1px;
+        left: 1px;
+        transition: transform 0.3s;
+    }
+
+.toggle-slider:checked + .slider-label {
+    background-color: #4caf50;
+}
+
+    .toggle-slider:checked + .slider-label::after {
+        transform: translateX(75px);
+    }
+
+.content {
+    display: none;
+    margin: 20px;
+}
+
+    .content.hidden {
+        display: none;
+    }
+
+    .content:not(.hidden) {
+        display: block;
+    }
+
+.text-decoration-line-through {
+    text-decoration: line-through;
+    color: gray; /* This can be adjusted based on your design */
+}
+
+.soft-deleted {
+    opacity: 0.5; /* Adjust opacity to indicate soft-deleted status */
+    pointer-events: none; /* Prevent any interactions with soft-deleted posts */
+}

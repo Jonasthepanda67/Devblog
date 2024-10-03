@@ -9,7 +9,7 @@ namespace Devblog_Library.Interfaces
 {
     public interface IPost
     {
-        public Guid Id { get; init; }
+        public Guid Id { get; set; }
         public string Title { get; set; }
         public string Reference { get; set; }
         public DateTime Date { get; set; }

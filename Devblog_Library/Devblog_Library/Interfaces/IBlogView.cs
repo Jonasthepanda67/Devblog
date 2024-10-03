@@ -21,10 +21,26 @@ namespace Devblog_Library.Interfaces
 
         public List<IPost> GetListOfPosts(PostType type);
 
+        public void AddTag(Tag tag, Post post);
+
+        public void RemoveTag(Tag tag, Post post);
+
+        public void SoftDeletePost(Guid id);
+
+        public Task SaveChangesAsync();
+
+        public void RestorePost(Guid id);
+
+        public void SavePostsToFile();
+
+        public List<Tag> LoadListOfTags();
+
         public void SetAuthor();
 
         public List<IPost> LoadListOfPosts();
 
-        public IPost GetPostById(Guid id);
+        public IPost GetPostById(Guid id, List<IPost> posts);
+
+        public Tag GetTagById(Guid id, List<Tag> tags);
     }
 }

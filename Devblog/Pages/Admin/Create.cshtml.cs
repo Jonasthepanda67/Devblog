@@ -1,18 +1,22 @@
 using Devblog_Library.Interfaces;
 using Devblog_Library.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 
 namespace Devblog.Pages.Admin
 {
+    [Authorize]
     public class CreateModel : PageModel
     {
         private readonly IBlogView _blogView;
+        private readonly ITagRepo _tagRepo;
 
-        public CreateModel(IBlogView blogView)
+        public CreateModel(IBlogView blogView, ITagRepo tagRepo)
         {
             _blogView = blogView;
+            _tagRepo = tagRepo;
         }
 
         [BindProperty]
@@ -42,9 +46,16 @@ namespace Devblog.Pages.Admin
         [Required(ErrorMessage = "Please select a post type.")]
         public PostType? PostTypes { get; set; }
 
+        [BindProperty]
+        [Required(ErrorMessage = "Please a Tag Name")]
+        public string TagName { get; set; }
+
+        public bool SliderIsChecked { get; set; } = false;
+
         public IActionResult OnPostCreatePost()
         {
-            if (PostTypes == null)
+            ModelState.Remove(nameof(TagName));
+            if (PostTypes == null && SliderIsChecked)
             {
                 ModelState.AddModelError("PostTypes", "Please select a post type.");
                 return Page();
@@ -107,6 +118,27 @@ namespace Devblog.Pages.Admin
             {
                 _blogView.AddPost(Title, Reference, Description, Image);
             }
+
+            return RedirectToPage("/Admin/Index");
+        }
+
+        public IActionResult OnPostCreateTag()
+        {
+            ModelState.Remove(nameof(Title));
+            ModelState.Remove(nameof(Reference));
+            ModelState.Remove(nameof(Description));
+            ModelState.Remove(nameof(Pros));
+            ModelState.Remove(nameof(Cons));
+            ModelState.Remove(nameof(Stars));
+            ModelState.Remove(nameof(Image));
+            ModelState.Remove(nameof(PostTypes));
+
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            _tagRepo.CreateTag(TagName);
 
             return RedirectToPage("/Admin/Index");
         }

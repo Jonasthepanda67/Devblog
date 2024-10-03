@@ -20,14 +20,15 @@ namespace Devblog.Pages
         }
 
         [BindProperty]
+        [Required]
         public string UserName { get; set; }
 
         [BindProperty, DataType(DataType.Password)]
+        [Required]
         public string Password { get; set; }
 
         public string Message { get; set; }
 
-        //Activates when the form is submitted
         public async Task<IActionResult> OnPost()
         {
             var user = configuration.GetSection("SiteUser").Get<SiteUser>();
@@ -37,15 +38,20 @@ namespace Devblog.Pages
                 var passwordHasher = new PasswordHasher<string>();
                 if (passwordHasher.VerifyHashedPassword(null, user.Password, Password) == PasswordVerificationResult.Success)
                 {
-                    var claims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Name, UserName)
-                    };
+                    var claims = new List<Claim> { new Claim(ClaimTypes.Name, UserName) };
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    // Sign in user
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-                    return RedirectToPage("/admin/index");
+
+                    // Check if there's a return URL and redirect there, or default to /admin/index
+                    var returnUrl = Request.Query["ReturnUrl"].FirstOrDefault() ?? "/admin/index";
+
+                    return Redirect(returnUrl);
                 }
             }
+
+            // Invalid login attempt
             Message = "Invalid attempt";
             return Page();
         }

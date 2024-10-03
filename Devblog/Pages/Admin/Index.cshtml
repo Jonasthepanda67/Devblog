@@ -5,44 +5,124 @@
     var postTypes = Enum.GetNames(typeof(PostType));
 }
 
+<head>
+    <link rel="stylesheet" href="~/css/Styles.css">
+</head>
+
 <body>
     <h2 class="text-center mt-4">Admin Panel</h2>
 
-    <div class="container mt-4">
-        <div class="row mb-4">
-            <div class="col-md-4">
-                <a class="btn btn-primary" asp-page="/Admin/Create">Create New Post</a>
-            </div>
-            <div class="col-md-4">
-                <label for="postTypeFilter" class="form-label">Filter by Post Type</label>
-                <select id="postTypeFilter" class="form-select">
-                    <option value="All">All</option>
-                    @foreach (var postType in postTypes)
-                    {
-                        <option value="@postType">@postType</option>
-                    }
-                </select>
-            </div>
-        </div>
+    <div class="slider-container">
+        <input type="checkbox" id="toggle-slider" class="toggle-slider">
+        <label for="toggle-slider" class="slider-label"></label>
+    </div>
 
-        <div id="postContainer" class="row">
-            @foreach (var post in Model.Posts)
-            {
-                <div class="post-preview">
-                    <h3>@post.Title</h3>
-                    <p>@post.Date.ToShortDateString()</p>
-                    <a asp-page="/Admin/PostDetails" asp-route-id="@post.Id">View More</a>
+    <div id="content-left" class="content">
+        <div class="container mt-4">
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <a class="btn btn-primary" asp-page="/Admin/Create">Create New Post</a>
                 </div>
-            }
+                <div class="col-md-4">
+                    <label for="postTypeFilter" class="form-label">Filter by Post Type</label>
+                    <select id="postTypeFilter" class="form-select">
+                        <option value="All">All</option>
+                        @foreach (var postType in postTypes)
+                        {
+                            <option value="@postType">@postType</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <!-- Display Posts as Bootstrap Cards -->
+            <div id="postContainer" class="row">
+                @foreach (var post in Model.Posts)
+                {
+                    <div class="col-md-4 mb-4 post-card" data-posttype="@post.Type.ToString()">
+                        <div class="card shadow-sm h-100 @((post.IsDeleted ? "soft-deleted" : ""))">
+                            <div class="card-body">
+                                <h5 class="card-title @((post.IsDeleted ? "text-decoration-line-through" : ""))">@post.Title</h5>
+                                <p class="card-text"><strong>Date:</strong> @post.Date.ToShortDateString()</p>
+                                <p class="card-text"><strong>Type:</strong> @post.Type.ToString()</p>
+                                <div class="d-flex justify-content-between">
+                                    <a class="btn btn-success" asp-page="/Admin/PostDetails" asp-route-id="@post.Id">View More</a>
+                                    <a class="btn btn-warning" asp-page="/Admin/Edit" asp-route-id="@post.Id" asp-route-type="Post">Edit</a>
+
+                                    <!-- Soft Delete Button -->
+                                    @if (!post.IsDeleted)
+                                    {
+                                        <form method="post" asp-page-handler="SoftDelete" asp-route-id="@post.Id" style="display:inline;">
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <button type="button" class="btn btn-danger" disabled>Deleted</button>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 
+    <div id="content-right" class="content hidden">
+        <div class="container mt-4">
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <a class="btn btn-primary" asp-page="/Admin/Create">Create New Tag</a>
+                </div>
+            </div>
+
+            <!-- Display Tags as Bootstrap Cards -->
+            <div id="tagContainer" class="row">
+                @foreach (var tag in Model.Tags)
+                {
+                    <div class="col-md-4 mb-4 post-card">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">@tag.Name</h5>
+                                <div class="d-flex justify-content-between">
+                                    <a class="btn btn-warning" asp-page="/Admin/Edit" asp-route-id="@tag.Id" asp-route-type="Tag">Edit</a>
+                                    <a class="btn btn-danger" asp-page="/Admin/Delete" asp-route-id="@tag.Id" asp-route-type="Tag">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const toggleSlider = document.getElementById('toggle-slider');
+            const contentLeft = document.getElementById('content-left');
+            const contentRight = document.getElementById('content-right');
+
+            toggleSlider.addEventListener('change', function () {
+                if (toggleSlider.checked) {
+                    contentLeft.classList.add('hidden');
+                    contentRight.classList.remove('hidden');
+                } else {
+                    contentLeft.classList.remove('hidden');
+                    contentRight.classList.add('hidden');
+                }
+            });
+        });
+    </script>
+    <script>
         $(document).ready(function () {
+            // Post type filter change event
             $('#postTypeFilter').change(function () {
                 var selectedType = $(this).val();
 
+                // Show/hide posts based on selected type
                 $('.post-card').each(function () {
                     var postType = $(this).data('posttype');
 
