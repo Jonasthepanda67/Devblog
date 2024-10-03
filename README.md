@@ -36,6 +36,7 @@ Welcome to my **Devblog** project. This is a school project that i have worked o
 - Implemented CRUD functions
 - Fixed login to work across all pages
 - Added and fixed a filter function for the admin index page
+- Added a slider for Admin folder pages to switch between managing posts and tags
 
 ### **V1.1.0**
 - Added an Admin Panel with a login for the author of the website to use
