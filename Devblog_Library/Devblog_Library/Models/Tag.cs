@@ -8,7 +8,7 @@ namespace Devblog_Library.Models
 {
     public class Tag
     {
-        public Guid Id { get; init; }
+        public Guid Id { get; set; } //fix when you use a database
         public string Name { get; set; }
 
         public Tag(string name)

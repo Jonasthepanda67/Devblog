@@ -1,4 +1,13 @@
-﻿@page
+﻿@page "{id:guid}"
+@using Devblog_Library.Models
 @model Devblog.Pages.Admin.DeleteModel
 @{
 }
+
+<h2>Delete Post</h2>
+
+<p>Are you sure you want to delete @Model.Post.Title?</p>
+<button>Yes</button>
+
+
+<a asp-page="/Admin/Index">Back to posts</a>
