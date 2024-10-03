@@ -17,6 +17,8 @@ Welcome to my **Devblog** project. This is a school project that i have worked o
 - [X] Use Bootstrap for front-end
 - [ ] Add Login Feature
 - [ ] Create and use a database for all data
+- [ ] Add an admin panel for handling posts
+- [ ] Use CRUD for handling posts
 - [ ] Add Users and Comments as a feature
  
 ## 🚧 Known Issues
