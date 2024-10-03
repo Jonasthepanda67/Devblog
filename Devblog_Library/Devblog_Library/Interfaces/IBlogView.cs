@@ -22,5 +22,9 @@ namespace Devblog_Library.Interfaces
         public List<IPost> GetListOfPosts(PostType type);
 
         public void SetAuthor();
+
+        public List<IPost> LoadListOfPosts();
+
+        public IPost GetPostById(Guid id);
     }
 }

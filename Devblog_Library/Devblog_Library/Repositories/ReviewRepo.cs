@@ -10,9 +10,13 @@ namespace Devblog_Library.Repositories
 {
     public class ReviewRepo : IRepo<Review>
     {
-        public Review CreatePost(string title, string reference, string description, string content, short stars)
+        public Review CreatePost(string title, string reference, string pros, string cons, short stars)
         {
-            Review post = new Review(title, reference, PostType.Review, description, content, stars);
+            Review post = new Review(title, reference, PostType.Review, pros, cons, stars);
+            using (StreamWriter writer = new StreamWriter(@"C:\Users\U427797\OneDrive - Danfoss\Desktop\testfile.txt", append: true))
+            {
+                writer.WriteLine($"Review|{DateTime.Now.Date}|{title}|{reference}|{pros}|{cons}|{stars}");
+            }
             return post;
         }
     }

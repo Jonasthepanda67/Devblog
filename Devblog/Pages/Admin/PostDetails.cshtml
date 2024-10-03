@@ -1,0 +1,26 @@
+﻿@page "{id:guid}"
+@using Devblog_Library.Models
+@model Devblog.Pages.Admin.PostDetailsModel
+
+<h2>@Model.Post.Title</h2>
+
+<p>@Model.Post.Date.ToShortDateString()</p>
+<p>@Model.Post.Reference</p>
+
+@if (Model.Post is BlogPost blogPost)
+{
+    <p>@blogPost.Weblog</p>
+}
+else if (Model.Post is Review review)
+{
+    <p>Pros: @review.Pros</p>
+    <p>Cons: @review.Cons</p>
+    <p>Rating: @review.Stars</p>
+}
+else if (Model.Post is Project project)
+{
+    <p>@project.Description</p>
+    <img src="@project.Image" alt="Project image" />
+}
+
+<a asp-page="/Admin/Index">Back to posts</a>

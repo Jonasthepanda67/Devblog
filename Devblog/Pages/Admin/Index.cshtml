@@ -1,0 +1,58 @@
+﻿@page
+@using Devblog_Library.Models
+@model Devblog.Pages.Admin.IndexModel
+@{
+    var postTypes = Enum.GetNames(typeof(PostType));
+}
+
+<body>
+    <h2 class="text-center mt-4">Admin Panel</h2>
+
+    <div class="container mt-4">
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <a class="btn btn-primary" asp-page="/Admin/Create">Create New Post</a>
+            </div>
+            <div class="col-md-4">
+                <label for="postTypeFilter" class="form-label">Filter by Post Type</label>
+                <select id="postTypeFilter" class="form-select">
+                    <option value="All">All</option>
+                    @foreach (var postType in postTypes)
+                    {
+                        <option value="@postType">@postType</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div id="postContainer" class="row">
+            @foreach (var post in Model.Posts)
+            {
+                <div class="post-preview">
+                    <h3>@post.Title</h3>
+                    <p>@post.Date.ToShortDateString()</p>
+                    <a asp-page="/Admin/PostDetails" asp-route-id="@post.Id">View More</a>
+                </div>
+            }
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#postTypeFilter').change(function () {
+                var selectedType = $(this).val();
+
+                $('.post-card').each(function () {
+                    var postType = $(this).data('posttype');
+
+                    if (selectedType === 'All' || postType === selectedType) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+        });
+    </script>
+</body>

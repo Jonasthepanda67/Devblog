@@ -14,7 +14,7 @@ namespace Devblog_Library.Models
         public Guid Id { get; init; }
         public string Title { get; set; }
         public string Reference { get; set; }
-        public DateTime Date { get; init; }
+        public DateTime Date { get; set; }
         public PostType Type { get; init; }
         public TagList Tags { get; init; }
         public List<Comment> Comments { get; set; }

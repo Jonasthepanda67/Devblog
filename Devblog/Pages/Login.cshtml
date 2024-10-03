@@ -1,59 +1,28 @@
 ﻿@page
 @model Devblog.Pages.LoginModel
 @{
+    ViewData["Title"] = "Login";
 }
 
 <body>
-    <div class="col mt-1">
-        <form method="post">
-            <div class="row mb-3 justify-content-center">
-                <label class="col-3 font-weight-bold" for="Username">Username: </label>
-                <input class="col-7" type="text" id="Username" required name="Username" autocomplete="off" /><br />
-            </div>
-
-            <div class="row mb-3 justify-content-center">
-                <label class="col-3 font-weight-bold" for="Password">Password: </label>
-                <input class="col-7" type="text" id="Password" required name="Password" autocomplete="off" /><br />
-            </div>
-
-            <div class="row mb-3 justify-content-end">
-                <input class="col-2 font-weight-bold btn-success" type="submit" value="Log In" style="font-size: x-large;" />
-            </div>
-        </form>
+    <div>
+        @Model.Message
     </div>
-</body>
-
-<div id="ResultModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="ResultModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="ResultModalLabel">System Message</h5>
-            </div>
-            <div class="modal-body">
-                <p>@TempData["ModalMessage"]</p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" type="button" data-dismiss="modal">Ok</button>
+    <form method="post">
+        <div class="form-group">
+            <label asp-for="UserName" class="col-form-label col-md-2"></label>
+            <div class="col-md-10">
+                <input asp-for="UserName" />
             </div>
         </div>
-    </div>
-</div>
-
-@section Scripts {
-    @if (Model.ShowModal)
-    {
-        <script>
-            $(document).ready(function () {
-                $('#ResultModal').modal('show');
-            });
-        </script>
-    }
-    @if (string.IsNullOrEmpty(@Model.UserName))
-    {
-        <script>
-            $(document).ready(function () {
-                $("#Username").focus();
-            });
-        </script>
-    }
-}
+        <div class="form-group">
+            <label asp-for="Password" class="col-form-label col-md-2"></label>
+            <div class="col-md-10">
+                <input asp-for="Password" />
+            </div>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-outline-primary btn-sm">Log in</button>
+        </div>
+    </form>
+</body>

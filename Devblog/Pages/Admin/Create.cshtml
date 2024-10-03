@@ -1,0 +1,107 @@
+﻿@page
+@using Devblog_Library.Models
+@model Devblog.Pages.Admin.CreateModel
+@{
+}
+
+<body>
+    <div class="col mt-1">
+        <form method="post" asp-page-handler="CreatePost">
+            <div id="TitleDiv" class="row justify-content-center mb-4">
+                <label>Title: </label>
+                <input name="Title" required />
+                <span class="alert-danger" asp-validation-for="Title"></span>
+            </div>
+
+            <div id="ReferenceDiv" class="row justify-content-center mb-4">
+                <label>Reference: </label>
+                <input name="Reference" required />
+                <span class="alert-danger" asp-validation-for="Reference"></span>
+            </div>
+
+            <div id="TypesDiv" class="row justify-content-center mb-4">
+                <label>
+                    <input name="PostTypes" id="BlogPost" value="BlogPost" type="radio" required /> BlogPost
+                </label>
+                <span class="alert-danger" asp-validation-for="PostTypes"></span>
+
+                <label>
+                    <input name="PostTypes" id="Review" value="Review" type="radio" required /> Review
+                </label>
+                <span class="alert-danger" asp-validation-for="PostTypes"></span>
+
+                <label>
+                    <input name="PostTypes" id="Project" value="Project" type="radio" required /> Project
+                </label>
+                <span class="alert-danger" asp-validation-for="PostTypes"></span>
+            </div>
+
+
+            <!-- BlogPost Fields -->
+            <div id="BlogPostDiv" checkboxids="BlogPost" class="row justify-content-center mb-4">
+                <label>Description: </label>
+                <input name="Description" required />
+                <span class="alert-danger" asp-validation-for="Description"></span>
+            </div>
+
+            <!-- Review Fields -->
+            <div id="ReviewDiv" checkboxids="Review" class="row justify-content-center mb-4">
+                <label>Pros: </label>
+                <input name="Pros" required />
+                <span class="alert-danger" asp-validation-for="Pros"></span>
+
+                <label>Cons: </label>
+                <input name="Cons" required />
+                <span class="alert-danger" asp-validation-for="Cons"></span>
+
+                <label>Stars: </label>
+                <input name="Stars" type="number" required />
+                <span class="alert-danger" asp-validation-for="Stars"></span>
+            </div>
+
+            <!-- Project Fields -->
+            <div id="ProjectDiv" checkboxids="Project" class="row justify-content-center mb-4">
+                <label>Description: </label>
+                <input name="Description" required />
+                <span class="alert-danger" asp-validation-for="Description"></span>
+
+                <label>Image: </label>
+                <input name="Image" required />
+                <span class="alert-danger" asp-validation-for="Image"></span>
+            </div>
+
+            <button type="submit" class="btn btn-success btn-lg col-3 font-weight-bold">Create Post</button>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script>
+        function toggleRequiredFields() {
+            $("input").removeAttr("required");
+
+            // Based on the selected PostType, add 'required' attribute to the visible fields
+            if ($("#BlogPost").is(":checked")) {
+                $("div[checkboxids='BlogPost'] input").attr("required", "required");
+            } else if ($("#Review").is(":checked")) {
+                $("div[checkboxids='Review'] input").attr("required", "required");
+            } else if ($("#Project").is(":checked")) {
+                $("div[checkboxids='Project'] input").attr("required", "required");
+            }
+        }
+
+        $("div[checkboxids]").hide();
+
+        $("input:radio").click(function () {
+            $("div[checkboxids]").hide();
+
+            $("input:checked").each(function () {
+                $("div[checkboxids*='" + $(this).attr("id") + "']").show();
+            });
+
+            toggleRequiredFields();
+        });
+
+        toggleRequiredFields();
+    </script>
+
+</body>
