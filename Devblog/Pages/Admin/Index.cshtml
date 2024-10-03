@@ -40,7 +40,7 @@
                 @foreach (var post in Model.Posts)
                 {
                     <div class="col-md-4 mb-4 post-card" data-posttype="@post.Type.ToString()">
-                        <div class="card shadow-sm h-100">
+                        <div class="card shadow-sm h-100 @((post.IsDeleted ? "soft-deleted" : ""))">
                             <div class="card-body">
                                 <h5 class="card-title @((post.IsDeleted ? "text-decoration-line-through" : ""))">@post.Title</h5>
                                 <p class="card-text"><strong>Date:</strong> @post.Date.ToShortDateString()</p>
@@ -65,7 +65,7 @@
 
                                         <!-- Soft Delete Button -->
                                         <form method="post" asp-page-handler="SoftDelete" asp-route-id="@post.Id" style="display:inline;">
-                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                            <button type="submit" class="btn btn-danger">Soft Delete</button>
                                         </form>
                                     }
                                 </div>

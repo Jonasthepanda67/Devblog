@@ -46,12 +46,11 @@
                     <span class="alert-danger" asp-validation-for="PostTypes"></span>
                 </div>
 
-
                 <!-- BlogPost Fields -->
                 <div id="BlogPostDiv" checkboxids="BlogPost" class="row justify-content-center mb-4">
-                    <label>Description: </label>
-                    <input name="Description" required />
-                    <span class="alert-danger" asp-validation-for="Description"></span>
+                    <label>Weblog: </label>
+                    <input name="Weblog" required />
+                    <span class="alert-danger" asp-validation-for="Weblog"></span>
                 </div>
 
                 <!-- Review Fields -->
@@ -122,33 +121,36 @@
     @if (!Model.SliderIsChecked)
     {
         <script>
-            function toggleRequiredFields() {
-                $("input").removeAttr("required");
+            $(document).ready(function() {
+            // Initially hide all fields
+            $("div[checkboxids]").hide();
 
-                // Based on the selected PostType, add 'required' attribute to the visible fields
-                if ($("#BlogPost").is(":checked")) {
-                    $("div[checkboxids='BlogPost'] input").attr("required", "required");
+            // Function to update required fields based on selected post type
+            function toggleRequiredFields() {
+                $("input").removeAttr("required"); // Clear all required attributes
+
+                // Add 'required' to the fields based on selected type
+                if ($("#Project").is(":checked")) {
+                    $("div[checkboxids='Project'] input").attr("required", "required");
                 } else if ($("#Review").is(":checked")) {
                     $("div[checkboxids='Review'] input").attr("required", "required");
-                } else if ($("#Project").is(":checked")) {
-                    $("div[checkboxids='Project'] input").attr("required", "required");
+                } else if ($("#BlogPost").is(":checked")) {
+                    $("div[checkboxids='BlogPost'] input").attr("required", "required");
                 }
             }
 
-            $("div[checkboxids]").hide();
-
+            // Handle radio button click
             $("input:radio").click(function () {
-                $("div[checkboxids]").hide();
+                $("div[checkboxids]").hide(); // Hide all fields
 
+                // Show the fields associated with the selected radio button
                 $("input:checked").each(function () {
-                    $("div[checkboxids*='" + $(this).attr("id") + "']").show();
+                    $("div[checkboxids*='" + $(this).attr("id") + "']").show(); // Show selected fields
                 });
 
-                toggleRequiredFields();
+                toggleRequiredFields(); // Ensure required fields are updated based on selection
             });
-
-            toggleRequiredFields();
+        });
         </script>
     }
-
 </body>

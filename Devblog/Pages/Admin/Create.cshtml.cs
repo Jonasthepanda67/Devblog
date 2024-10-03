@@ -31,6 +31,9 @@ namespace Devblog.Pages.Admin
         public string Description { get; set; }
 
         [BindProperty]
+        public string Weblog { get; set; }
+
+        [BindProperty]
         public string Pros { get; set; }
 
         [BindProperty]
@@ -61,23 +64,55 @@ namespace Devblog.Pages.Admin
                 return Page();
             }
 
+            // Handle the different post types
             if (PostTypes == PostType.BlogPost)
             {
+                // Remove fields that are not needed for BlogPost
                 ModelState.Remove(nameof(Pros));
                 ModelState.Remove(nameof(Cons));
                 ModelState.Remove(nameof(Stars));
                 ModelState.Remove(nameof(Image));
+                ModelState.Remove(nameof(Description));
             }
             else if (PostTypes == PostType.Review)
             {
+                // Remove fields that are not needed for Review
                 ModelState.Remove(nameof(Description));
                 ModelState.Remove(nameof(Image));
+                ModelState.Remove(nameof(Weblog));
+
+                // Ensure these fields are present for Review
+                if (string.IsNullOrWhiteSpace(Pros))
+                {
+                    ModelState.AddModelError("Pros", "Pros are required for Review.");
+                }
+                if (string.IsNullOrWhiteSpace(Cons))
+                {
+                    ModelState.AddModelError("Cons", "Cons are required for Review.");
+                }
+                if (!Stars.HasValue)
+                {
+                    ModelState.AddModelError("Stars", "Star rating is required for Review.");
+                }
             }
             else if (PostTypes == PostType.Project)
             {
+                // Remove validation for fields that are not required for Project
                 ModelState.Remove(nameof(Pros));
                 ModelState.Remove(nameof(Cons));
                 ModelState.Remove(nameof(Stars));
+                ModelState.Remove(nameof(Weblog));
+
+                // Ensure Description and Image are provided for Project
+                if (string.IsNullOrWhiteSpace(Description))
+                {
+                    ModelState.AddModelError("Description", "Description is required for Project.");
+                }
+
+                if (string.IsNullOrWhiteSpace(Image))
+                {
+                    ModelState.AddModelError("Image", "Image is required for Project.");
+                }
             }
 
             if (!ModelState.IsValid)
@@ -85,30 +120,9 @@ namespace Devblog.Pages.Admin
                 return Page();
             }
 
-            if (PostTypes == PostType.BlogPost && string.IsNullOrWhiteSpace(Description))
-            {
-                ModelState.AddModelError("Description", "Description is required for BlogPost.");
-                return Page();
-            }
-
-            if (PostTypes == PostType.Review)
-            {
-                if (string.IsNullOrWhiteSpace(Pros)) ModelState.AddModelError("Pros", "Pros are required.");
-                if (string.IsNullOrWhiteSpace(Cons)) ModelState.AddModelError("Cons", "Cons are required.");
-                if (!Stars.HasValue) ModelState.AddModelError("Stars", "Stars rating is required.");
-                if (!ModelState.IsValid) return Page();
-            }
-
-            if (PostTypes == PostType.Project && (string.IsNullOrWhiteSpace(Description) || string.IsNullOrWhiteSpace(Image)))
-            {
-                ModelState.AddModelError("Description", "Description is required for Project.");
-                ModelState.AddModelError("Image", "Image is required for Project.");
-                return Page();
-            }
-
             if (PostTypes == PostType.BlogPost)
             {
-                _blogView.AddPost(Title, Reference, Description);
+                _blogView.AddPost(Title, Reference, Weblog);
             }
             else if (PostTypes == PostType.Review)
             {
@@ -131,10 +145,17 @@ namespace Devblog.Pages.Admin
             ModelState.Remove(nameof(Cons));
             ModelState.Remove(nameof(Stars));
             ModelState.Remove(nameof(Image));
+            ModelState.Remove(nameof(Weblog));
             ModelState.Remove(nameof(PostTypes));
 
             if (!ModelState.IsValid)
             {
+                return Page();
+            }
+
+            if (string.IsNullOrWhiteSpace(TagName))
+            {
+                ModelState.AddModelError("TagName", "Tag Name is required.");
                 return Page();
             }
 

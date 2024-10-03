@@ -13,10 +13,10 @@
 }
 
 .slider-label {
-    width: 100px;
-    height: 25px;
+    width: 123px;
+    height: 48px;
     background-color: #ccc;
-    border-radius: 25px;
+    border-radius: 48px;
     position: relative;
     cursor: pointer;
     transition: background-color 0.3s;
@@ -24,8 +24,8 @@
 
     .slider-label::after {
         content: '';
-        width: 23px;
-        height: 23px;
+        width: 46px;
+        height: 46px;
         background-color: white;
         border-radius: 50%;
         position: absolute;
@@ -62,5 +62,4 @@
 
 .soft-deleted {
     opacity: 0.5; /* Adjust opacity to indicate soft-deleted status */
-    pointer-events: none; /* Prevent any interactions with soft-deleted posts */
 }
