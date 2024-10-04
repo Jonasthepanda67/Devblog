@@ -25,11 +25,14 @@ Welcome to my **Devblog** project. This is a school project that i have worked o
 - [ ] Create and use a database for all data
  
 ## 🚧 Known Issues
-*No major bugs reported so far!*
+*Edit didn't work for review posts*
  
 ## 🐞 Bug Reporting
-*Bug reporting isn't currently enabled for this project. If you encounter any issues, feel free to download the project and make your own improvements!*  
+*Bug reporting isn't currently enabled for this project. If you encounter any issues, feel free to download the project and make your own improvements!*   
  
+## 🔗 Tags & Links
+[View Tags](https://github.com/Jonasthepanda67/Devblog/tags)
+
 ## 📜 Changelog
 
 ### **V1.3.0**
@@ -57,6 +60,3 @@ Welcome to my **Devblog** project. This is a school project that i have worked o
 - Started working on a design for the whole web application
 - Added Unit Test
 - Added Bootstrap
- 
-## 🔗 Tags & Links
-[View Tags](https://github.com/Jonasthepanda67/Devblog/tags)
