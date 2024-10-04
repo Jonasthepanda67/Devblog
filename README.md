@@ -9,6 +9,8 @@ Welcome to my **Devblog** project. This is a school project that i have worked o
  
 ## Features
 - **3 Different types of Posts**: Choose from 3 types of posts: Blogpost, Review or a Project post.
+- **Create, Update and Soft delete functions** CRUD is setup for all posts.
+- **Admin Panel** Admin panel only accessable when logging in with admin account.
  
 ## 🔧 Current Tasks & Future Plans
 - [X] Create Models, Repositories and Interfaces
@@ -16,11 +18,11 @@ Welcome to my **Devblog** project. This is a school project that i have worked o
 - [X] Add Unit Test
 - [X] Use Bootstrap for front-end
 - [X] Add Login Feature
-- [ ] Create and use a database for all data
 - [X] Add an admin panel for handling posts
 - [X] Use CRUD for handling posts
 - [X] Implement a soft delete function
 - [ ] Add Users and Comments as a feature
+- [ ] Create and use a database for all data
  
 ## 🚧 Known Issues
 *No major bugs reported so far!*
