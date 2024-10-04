@@ -30,6 +30,11 @@ Welcome to my **Devblog** project. This is a school project that i have worked o
  
 ## 📜 Changelog
 
+### **V1.3.0**
+- Made some QOL changes and fixes
+- Fixed some design issues
+- Started on implementing Tags
+
 ### **V1.2.0**
 - Added a soft delete function
 - Designed cards for displayed blogpost and review and changing it a bit for displaying projects
