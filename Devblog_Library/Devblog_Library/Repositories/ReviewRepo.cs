@@ -15,7 +15,7 @@ namespace Devblog_Library.Repositories
             Review post = new Review(title, reference, PostType.Review, pros, cons, stars);
             using (StreamWriter writer = new StreamWriter(@"C:\Users\U427797\OneDrive - Danfoss\Desktop\testfile.txt", append: true))
             {
-                writer.WriteLine($"Review|{DateTime.Now.Date}|{post.Id}|{title}|{reference}|{pros}|{cons}|{stars}|{post.IsDeleted}");
+                writer.WriteLine($"Review|{DateTime.Now.Date}|{post.Id}|{title}|{reference}|{pros}|{cons}|{stars}|{post.IsDeleted}|NoTags");
             }
             return post;
         }

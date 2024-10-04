@@ -3,6 +3,8 @@ using Devblog_Library.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 
 namespace Devblog.Pages.Admin
@@ -18,6 +20,13 @@ namespace Devblog.Pages.Admin
             _blogView = blogView;
             _tagRepo = tagRepo;
         }
+
+        private IPost NewPost { get; set; }
+
+        [BindProperty]
+        public List<string> SelectedTagIds { get; set; } = new List<string>();
+
+        public List<Tag> Tags { get; set; } = new List<Tag>();
 
         [BindProperty]
         [Required(ErrorMessage = "Title is required")]
@@ -55,6 +64,11 @@ namespace Devblog.Pages.Admin
 
         public bool SliderIsChecked { get; set; } = false;
 
+        public void OnGet()
+        {
+            Tags = _blogView.LoadListOfTags();
+        }
+
         public IActionResult OnPostCreatePost()
         {
             ModelState.Remove(nameof(TagName));
@@ -64,10 +78,11 @@ namespace Devblog.Pages.Admin
                 return Page();
             }
 
+            //SelectedTagIds = JsonConvert.DeserializeObject<List<string>>(Request.Form["SelectedTagIds"]);
+
             // Handle the different post types
             if (PostTypes == PostType.BlogPost)
             {
-                // Remove fields that are not needed for BlogPost
                 ModelState.Remove(nameof(Pros));
                 ModelState.Remove(nameof(Cons));
                 ModelState.Remove(nameof(Stars));
@@ -117,21 +132,47 @@ namespace Devblog.Pages.Admin
 
             if (!ModelState.IsValid)
             {
+                foreach (var entry in ModelState)
+                {
+                    var key = entry.Key;
+                    var errors = entry.Value.Errors;
+
+                    foreach (var error in errors)
+                    {
+                        Console.WriteLine($"Key: {key}, Error: {error.ErrorMessage}");
+                    }
+                }
                 return Page();
             }
 
             if (PostTypes == PostType.BlogPost)
             {
-                _blogView.AddPost(Title, Reference, Weblog);
+                NewPost = _blogView.AddPost(Title, Reference, Weblog);
             }
             else if (PostTypes == PostType.Review)
             {
-                _blogView.AddPost(Title, Reference, Pros, Cons, Stars.Value);
+                NewPost = _blogView.AddPost(Title, Reference, Pros, Cons, Stars.Value);
             }
             else if (PostTypes == PostType.Project)
             {
-                _blogView.AddPost(Title, Reference, Description, Image);
+                NewPost = _blogView.AddPost(Title, Reference, Description, Image);
             }
+
+            /*if (!string.IsNullOrEmpty(SelectedTagIds))
+            {
+                var selectedTagIdsArray = SelectedTagIds.Split(',')
+                    .Select(id => Guid.Parse(id))
+                    .ToList();
+
+                foreach (var tagId in selectedTagIdsArray)
+                {
+                    var tag = _blogView.GetTagById(tagId, Tags);
+                    if (tag != null)
+                    {
+                        _blogView.AddTag(tag, NewPost);
+                    }
+                }
+            }*/
 
             return RedirectToPage("/Admin/Index");
         }

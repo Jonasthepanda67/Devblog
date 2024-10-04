@@ -15,7 +15,7 @@ namespace Devblog_Library.Repositories
             Project post = new Project(title, reference, PostType.Project, description, image);
             using (StreamWriter writer = new StreamWriter(@"C:\Users\U427797\OneDrive - Danfoss\Desktop\testfile.txt", append: true))
             {
-                writer.WriteLine($"Project|{DateTime.Now.Date}|{post.Id}|{title}|{reference}|{description}|{image}|{post.IsDeleted}");
+                writer.WriteLine($"Project|{DateTime.Now.Date}|{post.Id}|{title}|{reference}|{description}|{image}|{post.IsDeleted}|NoTags");
             }
             return post;
         }

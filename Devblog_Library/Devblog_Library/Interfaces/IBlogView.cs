@@ -9,11 +9,11 @@ namespace Devblog_Library.Interfaces
 {
     public interface IBlogView
     {
-        public void AddPost(string title, string reference, string weblog);
+        public IPost AddPost(string title, string reference, string weblog);
 
-        public void AddPost(string title, string reference, string pros, string cons, short stars);
+        public IPost AddPost(string title, string reference, string pros, string cons, short stars);
 
-        public void AddPost(string title, string reference, string description, string image);
+        public IPost AddPost(string title, string reference, string description, string image);
 
         public Post UpdatePost(Post post, string NewTitle, string NewReference);
 
@@ -21,9 +21,9 @@ namespace Devblog_Library.Interfaces
 
         public List<IPost> GetListOfPosts(PostType type);
 
-        public void AddTag(Tag tag, Post post);
+        public void AddTag(Tag tag, IPost post);
 
-        public void RemoveTag(Tag tag, Post post);
+        public void RemoveTag(Tag tag, IPost post);
 
         public void SoftDeletePost(Guid id);
 

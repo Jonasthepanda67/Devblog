@@ -1,5 +1,6 @@
 ﻿using Devblog_Library.Interfaces;
 using Devblog_Library.Models;
+using Devblog_Library.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace Devblog_Library.BLL
     {
         public Person Author { get; set; }
         private List<IPost> _posts = [];
+        private List<Tag> _tags = [];
         private readonly IRepo<BlogPost> _blogPostRepo;
         private readonly IRepo<Project> _projectRepo;
         private readonly IRepo<Review> _reviewRepo;
@@ -24,21 +26,28 @@ namespace Devblog_Library.BLL
             _projectRepo = projectRepo;
             _reviewRepo = reviewRepo;
             _posts = LoadListOfPosts();
+            _tags = LoadListOfTags();
         }
 
-        public void AddPost(string title, string reference, string weblog)
+        public IPost AddPost(string title, string reference, string weblog)
         {
-            _posts.Add(_blogPostRepo.CreatePost(title, reference, weblog));
+            IPost post = _blogPostRepo.CreatePost(title, reference, weblog);
+            _posts.Add(post);
+            return post;
         }
 
-        public void AddPost(string title, string reference, string pros, string cons, short stars)
+        public IPost AddPost(string title, string reference, string pros, string cons, short stars)
         {
-            _posts.Add(_reviewRepo.CreatePost(title, reference, pros, cons, stars));
+            IPost post = _reviewRepo.CreatePost(title, reference, pros, cons, stars);
+            _posts.Add(post);
+            return post;
         }
 
-        public void AddPost(string title, string reference, string description, string image)
+        public IPost AddPost(string title, string reference, string description, string image)
         {
-            _posts.Add(_projectRepo.CreatePost(title, reference, description, image));
+            IPost post = _projectRepo.CreatePost(title, reference, description, image);
+            _posts.Add(post);
+            return post;
         }
 
         public Post UpdatePost(Post post, string NewTitle, string NewReference)
@@ -128,17 +137,21 @@ namespace Devblog_Library.BLL
             {
                 foreach (var post in _posts)
                 {
+                    string tags = post.Tags != null && post.Tags.Any()
+                        ? string.Join(",", post.Tags.Select(t => t.Id))  // Store tags as comma-separated Ids
+                        : "NoTags";  // If no tags, store a placeholder
+
                     if (post is BlogPost blogPost)
                     {
-                        writer.WriteLine($"BlogPost|{blogPost.Date}|{blogPost.Id}|{blogPost.Title}|{blogPost.Reference}|{blogPost.Weblog}|{(post.IsDeleted ? "true" : "false")}");
+                        writer.WriteLine($"BlogPost|{blogPost.Date}|{blogPost.Id}|{blogPost.Title}|{blogPost.Reference}|{blogPost.Weblog}|{(post.IsDeleted ? "true" : "false")}|{tags}");
                     }
                     else if (post is Review review)
                     {
-                        writer.WriteLine($"Review|{review.Date}|{review.Id}|{review.Title}|{review.Reference}|{review.Pros}|{review.Cons}|{review.Stars}|{(post.IsDeleted ? "true" : "false")}");
+                        writer.WriteLine($"Review|{review.Date}|{review.Id}|{review.Title}|{review.Reference}|{review.Pros}|{review.Cons}|{review.Stars}|{(post.IsDeleted ? "true" : "false")}|{tags}");
                     }
                     else if (post is Project project)
                     {
-                        writer.WriteLine($"Project|{project.Date}|{project.Id}|{project.Title}|{project.Reference}|{project.Description}|{project.Image}|{(post.IsDeleted ? "true" : "false")}");
+                        writer.WriteLine($"Project|{project.Date}|{project.Id}|{project.Title}|{project.Reference}|{project.Description}|{project.Image}|{(post.IsDeleted ? "true" : "false")}|{tags}");
                     }
                 }
             }
@@ -154,13 +167,28 @@ namespace Devblog_Library.BLL
                     string line = reader.ReadLine();
                     string[] values = line.Split("|");
 
-                    if (values.Length < 7) // Not enough fields, skip the line
+                    if (values.Length < 8) // Adjusted for additional Tags field
                     {
                         continue;
                     }
 
-                    // Check for IsDeleted property (last field)
-                    bool isDeleted = bool.Parse(values[^1]); // Using C# 8.0 index from end
+                    // Check for IsDeleted property (second-last field)
+                    bool isDeleted = bool.Parse(values[^2]); // Adjusting index due to tags field
+
+                    // Parse the tags (last field)
+                    List<Tag> postTags = new List<Tag>();
+                    if (values[^1] != "NoTags")
+                    {
+                        var tagIds = values[^1].Split(',').Select(id => Guid.Parse(id)).ToList();
+                        foreach (var tagId in tagIds)
+                        {
+                            var tag = GetTagById(tagId, _tags); // Get each tag by ID
+                            if (tag != null)
+                            {
+                                postTags.Add(tag);  // Add valid tags to the post
+                            }
+                        }
+                    }
 
                     // Parse based on the post type
                     if (values[0] == "BlogPost")
@@ -169,8 +197,13 @@ namespace Devblog_Library.BLL
                         {
                             Date = DateTime.Parse(values[1]),
                             Id = Guid.Parse(values[2]),
-                            IsDeleted = isDeleted // Set IsDeleted from the file
+                            IsDeleted = isDeleted,
+                            //Tags = postTags // Assign the tags to the post
                         };
+                        foreach (Tag tag in postTags)
+                        {
+                            post.Tags.ListOfTags.Add(tag);
+                        }
                         posts.Add(post);
                     }
                     else if (values[0] == "Review")
@@ -179,19 +212,28 @@ namespace Devblog_Library.BLL
                         {
                             Date = DateTime.Parse(values[1]),
                             Id = Guid.Parse(values[2]),
-                            IsDeleted = isDeleted // Set IsDeleted from the file
+                            IsDeleted = isDeleted,
+                            //Tags = postTags // Assign the tags to the post
                         };
+                        foreach (Tag tag in postTags)
+                        {
+                            post.Tags.ListOfTags.Add(tag);
+                        }
                         posts.Add(post);
                     }
                     else if (values[0] == "Project")
                     {
-                        // Adjusting the Project parsing logic accordingly
                         Project post = new Project(values[3], values[4], PostType.Project, values[5], values[6])
                         {
                             Date = DateTime.Parse(values[1]),
                             Id = Guid.Parse(values[2]),
-                            IsDeleted = isDeleted // Set IsDeleted from the file
+                            IsDeleted = isDeleted,
+                            //Tags = postTags // Assign the tags to the post
                         };
+                        foreach (Tag tag in postTags)
+                        {
+                            post.Tags.ListOfTags.Add(tag);
+                        }
                         posts.Add(post);
                     }
                 }
@@ -199,12 +241,12 @@ namespace Devblog_Library.BLL
             return posts;
         }
 
-        public void RemoveTag(Tag tag, Post post)
+        public void RemoveTag(Tag tag, IPost post)
         {
             post.Tags.ListOfTags.Remove(tag);
         }
 
-        public void AddTag(Tag tag, Post post)
+        public void AddTag(Tag tag, IPost post)
         {
             post.Tags.ListOfTags.Add(tag);
         }
