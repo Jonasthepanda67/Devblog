@@ -16,7 +16,7 @@ namespace Devblog_Library.Models
         public string Reference { get; set; }
         public DateTime Date { get; set; }
         public PostType Type { get; init; }
-        public TagList Tags { get; init; }
+        public TagList Tags { get; set; }
         public List<Comment> Comments { get; set; }
         public bool IsDeleted { get; set; }
 

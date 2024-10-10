@@ -78,8 +78,6 @@ namespace Devblog.Pages.Admin
                 return Page();
             }
 
-            //SelectedTagIds = JsonConvert.DeserializeObject<List<string>>(Request.Form["SelectedTagIds"]);
-
             // Handle the different post types
             if (PostTypes == PostType.BlogPost)
             {
@@ -158,21 +156,22 @@ namespace Devblog.Pages.Admin
                 NewPost = _blogView.AddPost(Title, Reference, Description, Image);
             }
 
-            /*if (!string.IsNullOrEmpty(SelectedTagIds))
+            if (!string.IsNullOrEmpty(Request.Form["SelectedTagIds"]))
             {
-                var selectedTagIdsArray = SelectedTagIds.Split(',')
-                    .Select(id => Guid.Parse(id))
-                    .ToList();
+                var selectedTagIdsArray = JsonConvert.DeserializeObject<List<string>>(Request.Form["SelectedTagIds"]);
 
-                foreach (var tagId in selectedTagIdsArray)
+                foreach (var tagIdStr in selectedTagIdsArray)
                 {
-                    var tag = _blogView.GetTagById(tagId, Tags);
-                    if (tag != null)
+                    if (Guid.TryParse(tagIdStr, out var tagId))
                     {
-                        _blogView.AddTag(tag, NewPost);
+                        var tag = _blogView.GetTagById(tagId);
+                        if (tag != null)
+                        {
+                            _blogView.AddTag(tag, NewPost);
+                        }
                     }
                 }
-            }*/
+            }
 
             return RedirectToPage("/Admin/Index");
         }

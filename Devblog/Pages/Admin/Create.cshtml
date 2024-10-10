@@ -85,6 +85,9 @@
                     <span class="alert-danger" asp-validation-for="Image"></span>
                 </div>
 
+                <!-- Hidden input to store selected tags -->
+                <input type="hidden" name="SelectedTagIds" id="selected-tag-ids" />
+
                 <button type="submit" class="btn btn-success btn-lg col-3 font-weight-bold">Create Post</button>
             </form>
         </div>
@@ -126,10 +129,6 @@
             </div>
         </div>
     </div>
-
-
-    <!-- Hidden input to store selected tags -->
-    <input type="hidden" name="SelectedTagIds" id="selected-tag-ids" />
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -186,7 +185,7 @@
         </script>
         @*<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>*@
     }
-    @*<script>
+    <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Array to store selected tag IDs
             let selectedTagIds = [];
@@ -216,5 +215,5 @@
                 $('#TagModal').modal('hide');
             });
         });
-    </script>*@
+    </script>
 </body>

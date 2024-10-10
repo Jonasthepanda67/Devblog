@@ -14,16 +14,25 @@
                 <img src="@project.Image" alt="@project.Title Image" class="project-image" />
                 <div class="project-info">
                     <h3>@project.Title</h3>
-                    <p class="project-date">Published on: @project.Date.ToString("MMMM dd, yyyy")</p>
-                    <p class="project-description">@project.Description</p>
+                    @{
+                        var formattedDate = project.Date.ToString("MMMM dd, yyyy");
+                        var capitalizedDate = char.ToUpper(formattedDate[0]) + formattedDate.Substring(1);
+                    }
+                    <p class="project-date">Published on: @capitalizedDate</p>
+                    
+                    <!-- Description -->
+                    <div class="project-description">
+                        <h6 style="font-weight: bold;">Description :</h6>
+                        <p>@project.Description</p>
+                    </div>
 
                     <!-- Display Tags -->
                     <div class="project-tags">
                         <strong>Tags:</strong>
-                        @* @foreach (var tag in project.Tags)
+                        @foreach (Tag tag in project.Tags)
                         {
-                            <span class="tag">@tag.Name</span>
-                        } *@
+                            <button type="button" class="btn" disabled>@tag.Name</button>
+                        }
                     </div>
 
                     <!-- Project Link -->
@@ -91,8 +100,11 @@
 
     .project-description {
         margin-bottom: 10px;
-        color: #616161;
     }
+        .project-description p {
+            margin: 0;
+            color: #616161;
+        }
 
     .project-tags {
         margin-bottom: 15px;

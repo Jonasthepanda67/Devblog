@@ -22,7 +22,7 @@ namespace Devblog.Pages.Admin
         {
             Posts = _blogView.LoadListOfPosts();
 
-            Post = _blogView.GetPostById(id, Posts);
+            Post = _blogView.GetPostById(id);
 
             if (Post == null)
             {

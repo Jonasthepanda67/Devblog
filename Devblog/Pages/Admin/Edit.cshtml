@@ -5,62 +5,69 @@
 }
 
 <body>
-    @if (Model.Type == "Post")
+    @if (Model.Type == "Post" && Model.Post != null)
     {
         <h2 class="text-center">Edit Post</h2>
         <div class="container mt-4 d-flex justify-content-center align-items-center">
             <div class="col-md-6">
                 <p class="text-center">Date Created: @Model.Post.Date.ToShortDateString()</p>
+                <form method="post">
+                    <input type="hidden" name="PostId" value="@Model.Post.Id" />
+                    <input type="hidden" name="PostType" value="@Model.Post.GetType().Name" />
 
-                <div class="form-group mb-3">
-                    <label>Title: </label>
-                    <input class="form-control" value="@Model.Post.Title" />
-                </div>
-
-                <div class="form-group mb-3">
-                    <label>Reference: </label>
-                    <input class="form-control" value="@Model.Post.Reference" />
-                </div>
-
-                @if (Model.Post is BlogPost blogPost)
-                {
                     <div class="form-group mb-3">
-                        <label>Weblog: </label>
-                        <input class="form-control" value="@blogPost.Weblog" />
-                    </div>
-                }
-                else if (Model.Post is Review review)
-                {
-                    <div class="form-group mb-3">
-                        <label>Pros: </label>
-                        <input class="form-control" value="@review.Pros" />
+                        <label>Title: </label>
+                        <input class="form-control" name="Title" value="@Model.Post.Title" />
                     </div>
 
                     <div class="form-group mb-3">
-                        <label>Cons: </label>
-                        <input class="form-control" value="@review.Cons" />
-
+                        <label>Reference: </label>
+                        <input class="form-control" name="Reference" value="@Model.Post.Reference" />
                     </div>
 
-                    <div class="form-group mb-3">
-                        <label>Rating: </label>
-                        <input class="form-control" value="@review.Stars" />
+                    @if (Model.Post is BlogPost blogPost)
+                    {
+                        <div class="form-group mb-3">
+                            <label>Weblog: </label>
+                            <input class="form-control" name="Weblog" value="@blogPost.Weblog" />
+                        </div>
+                    }
+                    else if (Model.Post is Review review)
+                    {
+                        <div class="form-group mb-3">
+                            <label>Pros: </label>
+                            <input class="form-control" name="Pros" value="@review.Pros" />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label>Cons: </label>
+                            <input class="form-control" name="Cons" value="@review.Cons" />
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label>Rating: </label>
+                            <input class="form-control" name="Stars" value="@review.Stars" />
+                        </div>
+                    }
+                    else if (Model.Post is Project project)
+                    {
+                        <div class="form-group mb-3">
+                            <label>Description: </label>
+                            <input class="form-control" name="Description" value="@project.Description" />
+                        </div>
+                        <div class="text-center">
+                            <img src="@project.Image" alt="Project image" class="img-fluid" />
+                        </div>
+                    }
+
+                    <div>
+                        <button type="submit" class="btn btn-success btn-lg col-3 font-weight-bold">Save Changes</button>
                     </div>
-                }
-                else if (Model.Post is Project project)
-                {
-                    <div class="form-group mb-3">
-                        <label>Description: </label>
-                        <input class="form-control" value="@project.Description" />
-                    </div>
-                    <div class="text-center">
-                        <img src="@project.Image" alt="Project image" class="img-fluid" />
-                    </div>
-                }
+                </form>
             </div>
         </div>
     }
-    else if (Model.Type == "Tag")
+    else if (Model.Type == "Tag" && Model.Tag != null)
     {
         <h2 class="text-center">Edit Tag</h2>
         <div class="container mt-4 d-flex justify-content-center align-items-center">
@@ -72,8 +79,8 @@
             </div>
         </div>
     }
-
     <div class="text-center mt-4">
         <a class="btn btn-primary" asp-page="/Admin/Index">Back to Admin Panel</a>
     </div>
 </body>
+
