@@ -22,7 +22,7 @@ Welcome to my **Devblog** project. This is a school project that i have worked o
 - [X] Use CRUD for handling posts
 - [X] Implement a soft delete function
 - [ ] Add Users and Comments as a feature
-- [ ] Create and use a database for all data
+- [X] Create and use a database for all data
  
 ## 🚧 Known Issues
 *Edit didn't work for review posts*
@@ -34,6 +34,10 @@ Welcome to my **Devblog** project. This is a school project that i have worked o
 [View Tags](https://github.com/Jonasthepanda67/Devblog/tags)
 
 ## 📜 Changelog
+
+### **V2.0.0**
+- Changed from using files to storing all data in a local database
+- Created multiple store procedures, view and indexes for easier and better use of the database
 
 ### **V1.3.0**
 - Made some QOL changes and fixes
