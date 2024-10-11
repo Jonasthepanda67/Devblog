@@ -14,7 +14,6 @@ namespace Devblog.Pages.Admin
         private readonly IBlogView _blogView;
         public List<IPost> Posts { get; set; }
         public IPost Post { get; set; }
-        public List<Tag> Tags { get; set; }
         public Tag Tag { get; set; }
 
         [BindProperty(SupportsGet = true)]
@@ -27,7 +26,6 @@ namespace Devblog.Pages.Admin
         {
             _blogView = blogView;
             Posts = new List<IPost>();
-            //Tags = new List<Tag>();
         }
 
         public IActionResult OnGet()
@@ -40,7 +38,7 @@ namespace Devblog.Pages.Admin
 
                 if (Post == null)
                 {
-                    return NotFound(); // Ensure the page does not proceed if Post is null.
+                    return NotFound();
                 }
             }
             else if (Type == "Tag")
@@ -49,7 +47,7 @@ namespace Devblog.Pages.Admin
 
                 if (Tag == null)
                 {
-                    return NotFound(); // Similar check for Tag to avoid null reference.
+                    return NotFound();
                 }
             }
 
@@ -96,7 +94,6 @@ namespace Devblog.Pages.Admin
                 }
             }
 
-            // Redirect to the Admin panel after successful save
             return RedirectToPage("/Admin/Index");
         }
     }
