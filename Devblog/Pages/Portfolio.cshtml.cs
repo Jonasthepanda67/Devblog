@@ -14,12 +14,15 @@ namespace Devblog.Pages
             _blogView = blogView;
         }
 
-        public List<IPost> Projects = [];
+        public List<Project> Projects { get; set; } = new List<Project>();
 
         public void OnGet()
         {
-            _blogView.LoadListOfPosts();
-            Projects = _blogView.GetListOfPosts(PostType.Project);
+            // Fetch all project posts
+            Projects = _blogView.LoadListOfPosts()
+                                .Where(post => post.Type == PostType.Project)
+                                .Cast<Project>()
+                                .ToList();
         }
     }
 }

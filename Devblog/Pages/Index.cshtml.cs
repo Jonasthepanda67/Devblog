@@ -15,15 +15,15 @@ namespace Devblog.Pages
             _blogView = blogView;
         }
 
-        public List<IPost> Posts { get; set; } = [];
+        public List<IPost> Posts { get; set; } = new List<IPost>();
 
         public void OnGet()
         {
-            // Load the list of posts and exclude Project type directly using LINQ
+            // Fetch all posts (BlogPosts and Reviews only)
             Posts = _blogView.LoadListOfPosts()
-                            .Where(post => post.Type != PostType.Project)
-                            .OrderByDescending(p => p.Date) // Order by date (newest first)
-                            .ToList();
+                             .Where(post => post.Type == PostType.BlogPost || post.Type == PostType.Review)
+                             .OrderByDescending(p => p.Date)
+                             .ToList();
         }
     }
 }

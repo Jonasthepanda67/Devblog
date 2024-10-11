@@ -15,11 +15,15 @@ namespace Devblog_Library.Interfaces
 
         public IPost AddPost(string title, string reference, string description, string image);
 
-        public Post UpdatePost(Post post, string NewTitle, string NewReference);
+        public IPost UpdatePost(BlogPost post, string NewTitle, string NewReference, string NewWeblog);
+
+        public IPost UpdatePost(Review post, string NewTitle, string NewReference, string NewPros, string NewCons, short NewStars);
+
+        public IPost UpdatePost(Project post, string NewTitle, string NewReference, string NewDescription, string NewImage);
+
+        //public Post UpdatePost(Post post, string NewTitle, string NewReference);
 
         public void DeletePost(Guid id);
-
-        public List<IPost> GetListOfPosts(PostType type);
 
         public void AddTag(Tag tag, IPost post);
 
@@ -29,16 +33,14 @@ namespace Devblog_Library.Interfaces
 
         public void RestorePost(Guid id);
 
-        public void SavePostsToFile();
-
         public List<Tag> LoadListOfTags();
 
         public void SetAuthor();
 
         public List<IPost> LoadListOfPosts();
 
-        public IPost GetPostById(Guid id, List<IPost> posts);
+        public IPost GetPostById(Guid id);
 
-        public Tag GetTagById(Guid id, List<Tag> tags);
+        public Tag GetTagById(Guid id);
     }
 }

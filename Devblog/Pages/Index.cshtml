@@ -11,7 +11,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewData["Title"]</title>
 
     <style>
         /* Card Design */
@@ -42,6 +41,10 @@
         .post-date {
             font-size: 0.9rem;
             color: #777;
+        }
+
+        .post-tags {
+            color: black;
         }
 
         /* Post Reference link */
@@ -123,10 +126,23 @@
                     <div class="post-card">
                         <!-- Common Title and Date for all post types -->
                         <h2 class="post-title">@post.Title</h2>
-                        <p class="post-date">@post.Date.ToString("MMMM dd, yyyy")</p>
+                        @{
+                            var formattedDate = post.Date.ToString("MMMM dd, yyyy");
+                            var capitalizedDate = char.ToUpper(formattedDate[0]) + formattedDate.Substring(1);
+                        }
+                        <p class="post-date">Published On: @capitalizedDate</p>
 
                         <!-- Post Reference -->
                         <a href="@post.Reference" class="post-reference" target="_blank">Reference: @post.Reference</a>
+
+                        <!-- Display Tags -->
+                        <div class="post-tags">
+                            <strong>Tags:</strong>
+                            @foreach (Tag tag in post.Tags)
+                            {
+                                <button type="button" class="btn" disabled>@tag.Name</button>
+                            }
+                        </div>
 
                         <!-- Render BlogPost or Review based on post type -->
                         <div class="post-content">
