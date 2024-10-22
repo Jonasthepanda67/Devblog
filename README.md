@@ -2,7 +2,9 @@
 **By Jonasthepanda**
  
 ## Table of contents
-*Not implemented yet...
+[🔧 Current Tasks & Future Plans](https://github.com/Jonasthepanda67/Devblog?tab=readme-ov-file#-current-tasks--future-plans)
+[🐞 Bug Reporting](https://github.com/Jonasthepanda67/Devblog/blob/master/README.md#-bug-reporting)
+[📜 Changelog](https://github.com/Jonasthepanda67/Devblog/blob/master/README.md#-changelog)
  
 ## 📝 Description
 Welcome to my **Devblog** project. This is a school project that i have worked on and plan on using in the future for all my projects. In the future i plan on adding comments and thereby also add users so other can comment on my posts and give me their opinions and ideas for stuff.
