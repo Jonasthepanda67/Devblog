@@ -9,7 +9,7 @@
 ## 📝 Description
 Welcome to my **Devblog** project. This is a school project that i have worked on and plan on using in the future for all my projects. In the future i plan on adding comments and thereby also add users so other can comment on my posts and give me their opinions and ideas for stuff.
  
-## Features
+## 💻 Features
 - **3 Different types of Posts**: Choose from 3 types of posts: Blogpost, Review or a Project post.
 - **Create, Update and Soft delete functions** CRUD is setup for all posts.
 - **Admin Panel** Admin panel only accessable when logging in with admin account.
