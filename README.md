@@ -36,11 +36,11 @@ Welcome to my **Devblog** project. This is a school project that i have worked o
 *Bug reporting isn't currently enabled for this project. If you encounter any issues, feel free to download the project and make your own improvements!*   
  
 ## 🔗 Tags & Links
-* [V1.0.0](https://github.com/Jonasthepanda67/Devblog/releases/tag/V1.0.0)
+- [V1.0.0](https://github.com/Jonasthepanda67/Devblog/releases/tag/V1.0.0)
 [V1.1.0](https://github.com/Jonasthepanda67/Devblog/releases/tag/V1.1.0)
-* [V1.2.0](https://github.com/Jonasthepanda67/Devblog/releases/tag/V1.2.0)
+[V1.2.0](https://github.com/Jonasthepanda67/Devblog/releases/tag/V1.2.0)
 [V1.3.0](https://github.com/Jonasthepanda67/Devblog/releases/tag/V1.3.0)
-* [V2.0.0](https://github.com/Jonasthepanda67/Devblog/releases/tag/V2.0.0)
+- [V2.0.0](https://github.com/Jonasthepanda67/Devblog/releases/tag/V2.0.0)
 
 ## 📜 Changelog
 
