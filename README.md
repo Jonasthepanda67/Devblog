@@ -23,8 +23,11 @@ Welcome to my **Devblog** project. This is a school project that i have worked o
 - [X] Add an admin panel for handling posts
 - [X] Use CRUD for handling posts
 - [X] Implement a soft delete function
-- [ ] Add Users and Comments as a feature
 - [X] Create and use a database for all data
+- [ ] Add Users and Comments as a feature
+- [ ] Add Account Administration
+- [ ] Add Admins
+- [ ] Add Light/Dark mode
  
 ## 🚧 Known Issues
 *Edit didn't work for review posts*
