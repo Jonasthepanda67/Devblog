@@ -19,6 +19,7 @@ namespace Devblog_Library.Models
         public string City { get; set; }
         public int PhoneNumber { get; set; }
         public string Password { get; set; }
+        public DateTime CreationDate { get; set; } = DateTime.Now;
         public bool IsAuthor { get; set; }
 
         public Person(string firstName, string lastName, int age, string mail, string city, int phoneNumber, string password, bool isAuthor)

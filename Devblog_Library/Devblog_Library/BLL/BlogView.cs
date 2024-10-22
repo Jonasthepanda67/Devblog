@@ -540,7 +540,7 @@ namespace Devblog_Library.BLL
 
         public void SetAuthor()
         {
-            Author = _personRepo.People.Find(p => p.IsAuthor == true);
+            Author = _personRepo.UserAccounts.Find(p => p.IsAuthor == true);
             if (Author is null)
             {
                 _personRepo.LoadListOfPeople();

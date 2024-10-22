@@ -1,0 +1,136 @@
+﻿@page
+@using Devblog_Library.Models
+@model Devblog.Pages.Admin.AccountsModel
+@{
+    ViewData["Title"] = "Account Administration";
+}
+
+<div class="accountpanel-container">
+    <h2 class="accountpanel-name">Accounts</h2>
+    <div class="account-grid">
+        @foreach (Person account in Model.Accounts)
+        {
+            <div class="account-card">
+                <div class="account-info">
+                    <h3>@account.FullName</h3>
+
+                    @{
+                        var formattedDate = account.CreationDate.ToString("MMMM dd, yyyy");
+                        var capitalizedDate = char.ToUpper(formattedDate[0]) + formattedDate.Substring(1);
+                    }
+                    <p class="account-date"><strong>Created on: </strong>@capitalizedDate</p>
+
+                    <div class="account-description">
+                        <h6 style="font-weight: bold;">Age: </h6>
+                        <p>@account.Age</p>
+                    </div>
+
+                    <div class="account-description">
+                        <h6 style="font-weight: bold;">Mail: </h6>
+                        <p>@account.Mail</p>
+                    </div>
+
+                    <div class="account-description">
+                        <h6 style="font-weight: bold;">City: </h6>
+                        <p>@account.City</p>
+                    </div>
+
+                    <div class="account-description">
+                        <h6 style="font-weight: bold;">Phone Number: </h6>
+                        <p>@account.PhoneNumber</p>
+                    </div>
+
+                    <!-- Placeholder for when admins get added -->
+                    <div></div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .accountpanel-container {
+        width: 90%;
+        margin: 0 auto;
+        padding: 40px 0;
+    }
+
+    .accountpanel-title {
+        text-align: center;
+        color: #4A4A4A;
+        margin-bottom: 40px;
+        font-size: 2.5em;
+    }
+
+    .account-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+    }
+
+    .account-card {
+        background-color: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+        .account-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+    .account-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .account-info {
+        padding: 20px;
+    }
+
+        .account-info h3 {
+            margin: 0;
+            color: #333;
+        }
+
+    .account-date {
+        font-size: 0.9em;
+        color: #777;
+        margin: 10px 0;
+    }
+
+    .account-description {
+        margin-bottom: 10px;
+    }
+
+        .account-description p {
+            margin: 0;
+            color: #616161;
+        }
+
+    .account-tags {
+        margin-bottom: 15px;
+    }
+
+    .tag {
+        background-color: #f0f0f0;
+        padding: 5px 10px;
+        border-radius: 5px;
+        margin-right: 5px;
+        font-size: 0.85em;
+    }
+
+    .account-link {
+        text-decoration: none;
+        color: #007bff;
+        font-weight: bold;
+    }
+
+        .account-link:hover {
+            text-decoration: underline;
+        }
+</style>

@@ -13,10 +13,12 @@ namespace Devblog.Pages
     public class LoginModel : PageModel
     {
         private readonly IConfiguration configuration;
+        private readonly IPersonRepo _personRepo;
 
-        public LoginModel(IConfiguration configuration)
+        public LoginModel(IConfiguration configuration, IPersonRepo personRepo)
         {
             this.configuration = configuration;
+            _personRepo = personRepo;
         }
 
         [BindProperty]
@@ -26,6 +28,27 @@ namespace Devblog.Pages
         [BindProperty, DataType(DataType.Password)]
         [Required]
         public string Password { get; set; }
+
+        [BindProperty]
+        public string FirstName { get; set; }
+
+        [BindProperty]
+        public string LastName { get; set; }
+
+        [BindProperty]
+        public int Age { get; set; }
+
+        [BindProperty]
+        public string Mail { get; set; }
+
+        [BindProperty]
+        public string City { get; set; }
+
+        [BindProperty]
+        public int PhoneNumber { get; set; }
+
+        [BindProperty]
+        public string ChosenPassword { get; set; }
 
         public string Message { get; set; }
 
@@ -41,19 +64,31 @@ namespace Devblog.Pages
                     var claims = new List<Claim> { new Claim(ClaimTypes.Name, UserName) };
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-                    // Sign in user
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
-                    // Check if there's a return URL and redirect there, or default to /admin/index
                     var returnUrl = Request.Query["ReturnUrl"].FirstOrDefault() ?? "/admin/index";
 
                     return Redirect(returnUrl);
                 }
             }
 
-            // Invalid login attempt
             Message = "Invalid attempt";
             return Page();
+        }
+
+        public IActionResult OnPostCreateAccount()
+        {
+            ModelState.Remove(nameof(UserName));
+            ModelState.Remove(nameof(Password));
+
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            _personRepo.CreatePerson(FirstName, LastName, Age, Mail, City, PhoneNumber, Password);
+
+            return RedirectToPage("/Login");
         }
     }
 }

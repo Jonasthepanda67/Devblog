@@ -1,24 +1,57 @@
 ﻿using Devblog_Library.Interfaces;
 using Devblog_Library.Models;
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Devblog_Library.Repositories
 {
     public class PersonRepo : IPersonRepo
     {
-        private static string _fileName = @"C:\Users\U427797\source\repos\Devblog-Portfolio\bin\Debug\net8.0\Author.txt";
-        public List<Person> People { get; } = [];
+        private readonly SqlConnection con;
+        public List<Person> UserAccounts { get; } = [];
 
-        public Person CreatePerson(Person person)
+        public PersonRepo(IConfiguration configuration)
         {
-            using (StreamWriter sw = new StreamWriter(_fileName, append: true))
+            string conStr = configuration.GetConnectionString("MainConnection");
+            con = new SqlConnection(conStr);
+            UserAccounts = LoadListOfPeople();
+        }
+
+        public Person CreatePerson(string firstName, string lastName, int age, string mail, string city, int phoneNumber, string password)
+        {
+            Person person = new Person(firstName, lastName, age, mail, city, phoneNumber, password, false);
+
+            SqlCommand cmd = new("sp_CreateUserAccount", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Post_Id", SqlDbType.NVarChar).Value = person.Id;
+            cmd.Parameters.AddWithValue("@FName", firstName);
+            cmd.Parameters.AddWithValue("@LName", lastName);
+            cmd.Parameters.AddWithValue("@FullName", person.FullName);
+            cmd.Parameters.AddWithValue("@Age", age);
+            cmd.Parameters.AddWithValue("@Mail", mail);
+            cmd.Parameters.AddWithValue("@City", city);
+            cmd.Parameters.AddWithValue("@Number", phoneNumber);
+            cmd.Parameters.AddWithValue("@Password", password);
+            cmd.Parameters.AddWithValue("@CreationDate", person.CreationDate);
+            try
             {
-                sw.WriteLine($"{person.Id},{person.FirstName},{person.LastName},{person.Age},{person.Mail},{person.City}.{person.PhoneNumber},{person.Password},false");
-                People.Add(person);
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (SqlException e)
+            {
+                //Do stuff here
+            }
+            finally
+            {
+                con.Close();
             }
 
             return person;
@@ -27,26 +60,58 @@ namespace Devblog_Library.Repositories
         public Person? GetPersonDetails(string id)
         {
             Guid.TryParse(id, out var personId);
-            return People.Find(p => p.Id == personId);
+            return UserAccounts.Find(p => p.Id == personId);
         }
 
-        //fix this method
-        public void LoadListOfPeople()
+        public List<Person> LoadListOfPeople()
         {
-            Person person;
-            string line;
-            StreamReader file = new StreamReader(_fileName);
-            while (!(file.EndOfStream))
+            List<Person> userAccounts = new List<Person>();
+
+            string sqlCommand = "SELECT * FROM PersonTable";
+
+            SqlCommand cmd = new SqlCommand(sqlCommand, con);
+
+            try
             {
-                line = file.ReadLine();
-                if (line != string.Empty)
+                if (con.State != ConnectionState.Open)
                 {
-                    string[] splittetStr = line.Split(",");
-                    person = new Person(splittetStr[1], splittetStr[2], int.Parse(splittetStr[3]), splittetStr[4], splittetStr[5], int.Parse(splittetStr[6]), splittetStr[7], bool.Parse(splittetStr[8]));
-                    People.Add(person);
+                    con.Open();
+                }
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        Person person = new Person(
+                            firstName: reader["FName"].ToString(),
+                            lastName: reader["LName"].ToString(),
+                            age: Convert.ToInt32(reader["Age"]),
+                            mail: reader["Mail"].ToString(),
+                            city: reader["City"].ToString(),
+                            phoneNumber: Convert.ToInt32(reader["Number"]),
+                            password: reader["Password"].ToString(),
+                            isAuthor: reader.GetBoolean(reader.GetOrdinal("IsAuthor"))
+                        )
+                        {
+                            Id = Guid.Parse(reader["Person_Id"].ToString()),
+                            CreationDate = DateTime.Parse(reader["CreationDate"].ToString())
+                        };
+                        userAccounts.Add(person);
+                    }
                 }
             }
-            file.Close();
+            catch (SqlException e)
+            {
+                //do stuff here
+            }
+            finally
+            {
+                if (con.State == ConnectionState.Open)
+                {
+                    con.Close();
+                }
+            }
+            return userAccounts;
         }
     }
 }
