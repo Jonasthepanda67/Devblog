@@ -1,4 +1,5 @@
 using Devblog_Library.Interfaces;
+using Devblog_Library.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,25 +10,25 @@ namespace Devblog.Pages.Admin
     public class DeleteModel : PageModel
     {
         private readonly IBlogView _blogView;
-        public List<IPost> Posts { get; set; }
-        public IPost Post { get; set; }
+        private readonly ITagRepo _tagRepo;
+        public Tag Tag { get; set; }
 
-        public DeleteModel(IBlogView blogView)
+        public DeleteModel(IBlogView blogView, ITagRepo tagRepo)
         {
             _blogView = blogView;
-            Posts = new List<IPost>();
+            _tagRepo = tagRepo;
         }
 
         public IActionResult OnGet(Guid id)
         {
-            Posts = _blogView.LoadListOfPosts();
+            Tag = _blogView.GetTagById(id);
 
-            Post = _blogView.GetPostById(id);
-
-            if (Post == null)
+            if (Tag == null)
             {
                 return NotFound();
             }
+
+            _tagRepo.DeleteTag(Tag);
 
             return Page();
         }

@@ -43,6 +43,11 @@
                     <!-- Placeholder for when admins get added -->
                     <div></div>
                 </div>
+                <a class="btn btn-warning" asp-page="/Admin/Edit" asp-route-id="@account.Id" asp-route-type="Account">Edit</a>
+
+                <form method="post" asp-page-handler="Delete" style="display:inline;">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
             </div>
         }
     </div>

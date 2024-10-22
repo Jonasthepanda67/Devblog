@@ -12,9 +12,11 @@ namespace Devblog.Pages.Admin
     public class EditModel : PageModel
     {
         private readonly IBlogView _blogView;
+        private readonly IPersonRepo _personRepo;
         public List<IPost> Posts { get; set; }
         public IPost Post { get; set; }
         public Tag Tag { get; set; }
+        public Person Person { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public Guid Id { get; set; }
@@ -22,10 +24,11 @@ namespace Devblog.Pages.Admin
         [BindProperty(SupportsGet = true)]
         public string Type { get; set; }
 
-        public EditModel(IBlogView blogView)
+        public EditModel(IBlogView blogView, IPersonRepo personRepo)
         {
             _blogView = blogView;
             Posts = new List<IPost>();
+            _personRepo = personRepo;
         }
 
         public IActionResult OnGet()
@@ -46,6 +49,15 @@ namespace Devblog.Pages.Admin
                 Tag = _blogView.GetTagById(Id);
 
                 if (Tag == null)
+                {
+                    return NotFound();
+                }
+            }
+            else if (Type == "Account")
+            {
+                Person = _personRepo.GetPersonById(Id);
+
+                if (Person == null)
                 {
                     return NotFound();
                 }

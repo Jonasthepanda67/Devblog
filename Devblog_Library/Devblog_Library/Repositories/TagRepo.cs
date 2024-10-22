@@ -48,5 +48,26 @@ namespace Devblog_Library.Repositories
             _tags.Add(tag);
             return tag;
         }
+
+        public void DeleteTag(Tag tag)
+        {
+            SqlCommand cmd = new("sp_DeleteTag", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Tag_Id", SqlDbType.NVarChar).Value = tag.Id;
+
+            try
+            {
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (SqlException e)
+            {
+                //do error handling here
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
     }
 }

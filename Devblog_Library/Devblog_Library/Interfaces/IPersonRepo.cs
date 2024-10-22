@@ -13,7 +13,7 @@ namespace Devblog_Library.Interfaces
 
         public Person CreatePerson(string firstName, string lastName, int age, string mail, string city, int phoneNumber, string password);
 
-        public Person GetPersonDetails(string id);
+        public Person GetPersonById(Guid id);
 
         public List<Person> LoadListOfPeople();
     }

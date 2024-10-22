@@ -10,5 +10,7 @@ namespace Devblog_Library.Interfaces
     public interface ITagRepo
     {
         public Tag CreateTag(string Name);
+
+        public void DeleteTag(Tag tag);
     }
 }

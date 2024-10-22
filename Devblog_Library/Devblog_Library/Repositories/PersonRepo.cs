@@ -57,10 +57,10 @@ namespace Devblog_Library.Repositories
             return person;
         }
 
-        public Person? GetPersonDetails(string id)
+        public Person GetPersonById(Guid id)
         {
-            Guid.TryParse(id, out var personId);
-            return UserAccounts.Find(p => p.Id == personId);
+            List<Person> userAccounts = LoadListOfPeople();
+            return userAccounts.Find(p => p.Id == id);
         }
 
         public List<Person> LoadListOfPeople()
