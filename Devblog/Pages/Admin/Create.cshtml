@@ -1,7 +1,9 @@
-﻿@page
+﻿@page "{type?}"
 @using Devblog_Library.Models
 @model Devblog.Pages.Admin.CreateModel
 @{
+    string Type = RouteData.Values["type"]?.ToString();
+    bool isTag = Type == "Tag";
 }
 
 <head>
@@ -12,11 +14,11 @@
 
 <body>
     <div class="slider-container">
-        <input type="checkbox" id="toggle-slider" class="toggle-slider">
+        <input type="checkbox" id="toggle-slider" class="toggle-slider" @(isTag ? "checked" : "")>
         <label for="toggle-slider" class="slider-label"></label>
     </div>
-
-    <div id="content-left" class="content">
+    
+    <div id="content-left" class="content @(isTag ? "hidden" : "")">
         <div class="col mt-1">
             <form method="post" asp-page-handler="CreatePost">
                 <div id="TitleDiv" class="row justify-content-center mb-4">
@@ -92,8 +94,8 @@
             </form>
         </div>
     </div>
-
-    <div id="content-right" class="content hidden">
+    
+    <div id="content-right" class="content @(isTag ? "" : "hidden")">
         <div class="col mt-1">
             <form method="post" asp-page-handler="CreateTag">
                 <div id="TagNameDiv" class="row justify-content-center mb-4">
@@ -136,15 +138,22 @@
             const contentLeft = document.getElementById('content-left');
             const contentRight = document.getElementById('content-right');
 
+            // Hide/show content based on slider's initial state
+            if (toggleSlider.checked) {
+                contentLeft.classList.add('hidden');
+                contentRight.classList.remove('hidden');
+            } else {
+                contentLeft.classList.remove('hidden');
+                contentRight.classList.add('hidden');
+            }
+
             toggleSlider.addEventListener('change', function () {
                 if (toggleSlider.checked) {
                     contentLeft.classList.add('hidden');
                     contentRight.classList.remove('hidden');
-                    @Model.SliderIsChecked = true;
                 } else {
                     contentLeft.classList.remove('hidden');
                     contentRight.classList.add('hidden');
-                    @Model.SliderIsChecked = false;
                 }
             });
         });

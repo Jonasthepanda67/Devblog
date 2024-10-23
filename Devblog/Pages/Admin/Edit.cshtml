@@ -60,8 +60,9 @@
                         </div>
                     }
 
-                    <div>
-                        <button type="submit" class="btn btn-success btn-lg col-3 font-weight-bold">Save Changes</button>
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-success font-weight-bold">Save Changes</button>
+                        <a class="btn btn-primary font-weight-bold" asp-page="/Admin/Index">Back to Admin Panel</a>
                     </div>
                 </form>
             </div>
@@ -82,8 +83,9 @@
                 </div>
             </div>
 
-            <div>
-                <button type="submit" class="btn btn-success btn-lg col-3 font-weight-bold">Save Changes</button>
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-success font-weight-bold">Save Changes</button>
+                <a class="btn btn-primary font-weight-bold" asp-page="/Admin/Index" asp-route-type="Tag">Back to Admin Panel</a>
             </div>
         </form>
     }
@@ -130,17 +132,14 @@
                         <label>Password: </label>
                         <input class="form-control" name="Password" value="" />
                     </div>
-                </div>
-            </div>
 
-            <div>
-                <button type="submit" class="btn btn-success btn-lg col-3 font-weight-bold">Save Changes</button>
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-success font-weight-bold">Save Changes</button>
+                        <a class="btn btn-primary font-weight-bold" asp-page="/Admin/Accounts">Back to Account Administration</a>
+                    </div>
+                </div>
             </div>
         </form>
     }
-
-    <div class="text-center mt-4">
-        <a class="btn btn-primary" asp-page="/Admin/Index">Back to Admin Panel</a>
-    </div>
 </body>
 

@@ -1,26 +1,56 @@
 ﻿@page "{id:guid}/{type}"
 @using Devblog_Library.Models
 @model Devblog.Pages.Admin.DeleteModel
+
 @{
+    Layout = null;
 }
 
-@if (Model.Type == "Tag" & Model.Tag != null)
-{
-    <h2>Delete Tag</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+    <title>Confirm Deletion</title>
+</head>
+<body class="bg-light">
 
-    <p>Are you sure you want to delete the @Model.Tag.Name Tag?</p>
-    <form method="post">
-        <button type="submit" class="btn btn-danger">Yes</button>
-    </form>
-}
-else if (Model.Type == "Account" & Model.Account != null)
-{
-    <h2>Delete Account</h2>
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header bg-danger text-white text-center">
+            <h3>Confirmation Required</h3>
+        </div>
+        <div class="card-body">
+            @if (Model.Type == "Tag" && Model.Tag != null)
+            {
+                <h4>Delete Tag</h4>
+                <p>Are you sure you want to delete the <strong>@Model.Tag.Name</strong> Tag?</p>
+            }
+            else if (Model.Type == "Account" && Model.Account != null)
+            {
+                <h4>Delete Account</h4>
+                <p>Are you sure you want to delete <strong>@Model.Account.FullName</strong>'s Account?</p>
+            }
 
-    <p>Are you sure you want to delete @Model.Account.FullName's Account?</p>
-    <form method="post">
-        <button type="submit" class="btn btn-danger">Yes</button>
-    </form>
-}
+            <form method="post">
+                <div class="d-flex justify-content-between mt-4">
+                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                    @if (Model.Type == "Account")
+                    {
+                        <a asp-page="/Admin/Accounts" class="btn btn-secondary">Cancel</a>
+                    }
+                    else if (Model.Type == "Tag")
+                    {
+                            <a asp-page="/Admin/Index" asp-route-type="Tag" class="btn btn-secondary">Cancel</a>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
-<a asp-page="/Admin/Index">Back to Admin Panel</a>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

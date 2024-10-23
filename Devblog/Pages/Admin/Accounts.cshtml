@@ -7,47 +7,37 @@
 
 <div class="accountpanel-container">
     <h2 class="accountpanel-name">Accounts</h2>
-    <div class="account-grid">
-        @foreach (Person account in Model.Accounts)
-        {
-            <div class="account-card">
-                <div class="account-info">
-                    <h3>@account.FullName</h3>
+    <div class="account-table">
+    <div class="account-table-header">
+        <div class="account-column name">Name</div>
+        <div class="account-column age">Age</div>
+        <div class="account-column mail">Email</div>
+        <div class="account-column city">City</div>
+        <div class="account-column phone">Phone</div>
+        <div class="account-column date">Created On</div>
+        <div class="account-column account-actions">Actions</div>
+    </div>
+    @foreach (Person account in Model.Accounts)
+    {
+        <div class="account-row">
+            <div class="account-column name">@account.FullName</div>
+            <div class="account-column age">@account.Age</div>
+            <div class="account-column mail">@account.Mail</div>
+            <div class="account-column city">@account.City</div>
+            <div class="account-column phone">@account.PhoneNumber</div>
 
-                    @{
-                        var formattedDate = account.CreationDate.ToString("MMMM dd, yyyy");
-                        var capitalizedDate = char.ToUpper(formattedDate[0]) + formattedDate.Substring(1);
-                    }
-                    <p class="account-date"><strong>Created on: </strong>@capitalizedDate</p>
+            @{
+                var formattedDate = account.CreationDate.ToString("MMMM dd, yyyy");
+                var capitalizedDate = char.ToUpper(formattedDate[0]) + formattedDate.Substring(1);
+            }
+            <div class="account-column date">@capitalizedDate</div>
 
-                    <div class="account-description">
-                        <h6 style="font-weight: bold;">Age: </h6>
-                        <p>@account.Age</p>
-                    </div>
-
-                    <div class="account-description">
-                        <h6 style="font-weight: bold;">Mail: </h6>
-                        <p>@account.Mail</p>
-                    </div>
-
-                    <div class="account-description">
-                        <h6 style="font-weight: bold;">City: </h6>
-                        <p>@account.City</p>
-                    </div>
-
-                    <div class="account-description">
-                        <h6 style="font-weight: bold;">Phone Number: </h6>
-                        <p>@account.PhoneNumber</p>
-                    </div>
-
-                    <!-- Placeholder for when admins get added -->
-                    <div></div>
-                </div>
+            <div class="account-column account-actions">
                 <a class="btn btn-warning" asp-page="/Admin/Edit" asp-route-id="@account.Id" asp-route-type="Account">Edit</a>
-
                 <a class="btn btn-danger" asp-page="/Admin/Delete" asp-route-id="@account.Id" asp-route-type="Account">Delete</a>
             </div>
-        }
+        </div>
+    }
     </div>
 </div>
 
@@ -58,82 +48,100 @@
         padding: 40px 0;
     }
 
-    .accountpanel-title {
+    .accountpanel-name {
         text-align: center;
         color: #4A4A4A;
         margin-bottom: 40px;
         font-size: 2.5em;
     }
 
-    .account-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 20px;
-    }
-
-    .account-card {
-        background-color: #fff;
+    .account-table {
+        width: 100%;
+        min-width: 800px; /* Ensure there is enough space for content */
+        border-collapse: collapse;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
         border-radius: 10px;
         overflow: hidden;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s, box-shadow 0.3s;
     }
 
-        .account-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-    .account-image {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
+    .account-table-header, .account-row {
+        display: flex;
+        background-color: #f8f9fa;
+        padding: 15px;
+        align-items: center;
         border-bottom: 1px solid #ddd;
+        transition: background-color 0.3s;
+        flex-wrap: nowrap; /* Prevent wrapping */
     }
 
-    .account-info {
-        padding: 20px;
-    }
-
-        .account-info h3 {
-            margin: 0;
-            color: #333;
-        }
-
-    .account-date {
-        font-size: 0.9em;
-        color: #777;
-        margin: 10px 0;
-    }
-
-    .account-description {
-        margin-bottom: 10px;
-    }
-
-        .account-description p {
-            margin: 0;
-            color: #616161;
-        }
-
-    .account-tags {
-        margin-bottom: 15px;
-    }
-
-    .tag {
-        background-color: #f0f0f0;
-        padding: 5px 10px;
-        border-radius: 5px;
-        margin-right: 5px;
-        font-size: 0.85em;
-    }
-
-    .account-link {
-        text-decoration: none;
-        color: #007bff;
+    .account-table-header {
+        background-color: #343a40;
+        color: #fff;
         font-weight: bold;
+        text-transform: uppercase;
     }
 
-        .account-link:hover {
-            text-decoration: underline;
-        }
+    .account-column {
+        padding: 10px;
+        text-align: left;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    /* Adjusted flex values for better space distribution */
+    .account-column.name {
+        flex: 1.5; /* Reduced size */
+    }
+
+    .account-column.age {
+        flex: 0.5; /* Smaller size */
+    }
+
+    .account-column.mail {
+        flex: 2.5; /* Larger size */
+    }
+
+    .account-column.city, 
+    .account-column.phone {
+        flex: 1; /* Default size */
+    }
+
+    .account-column.date {
+        flex: 1.5; /* Slightly increased size */
+    }
+
+    .account-column.account-actions {
+        flex: 1.2; /* Slightly increased size to ensure buttons fit */
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        flex-shrink: 0; /* Prevent shrinking */
+    }
+
+    .account-row:hover {
+        background-color: #f1f1f1;
+    }
+
+    .btn {
+        padding: 5px 10px;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #fff;
+        transition: background-color 0.3s;
+        min-width: 60px; /* Ensure the button is visible and not cut off */
+    }
+
+    .btn-warning {
+        background-color: #ffc107;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+    }
+
+    .btn:hover {
+        opacity: 0.8;
+    }
 </style>
