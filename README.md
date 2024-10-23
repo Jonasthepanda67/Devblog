@@ -4,6 +4,7 @@
 ## Table of contents
 - [🔧 Current Tasks & Future Plans](https://github.com/Jonasthepanda67/Devblog?tab=readme-ov-file#-current-tasks--future-plans)
 - [🐞 Bug Reporting](https://github.com/Jonasthepanda67/Devblog?tab=readme-ov-file#-bug-reporting)
+- [🔗 Tags & Links](https://github.com/Jonasthepanda67/Devblog?tab=readme-ov-file#-tags--links)
 - [📜 Changelog](https://github.com/Jonasthepanda67/Devblog?tab=readme-ov-file#-changelog)
  
 ## 📝 Description
