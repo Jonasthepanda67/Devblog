@@ -47,7 +47,7 @@ Welcome to my **Devblog** project. This is a school project that i have worked o
 
 ### **V2.0.0**
 - Changed from using files to storing all data in a local database
-- Created multiple store procedures, view and indexes for easier and better use of the database
+- Created multiple stored procedures, views and indexes for easier and better use of the database
 
 ### **V1.3.0**
 - Made some QOL changes and fixes
