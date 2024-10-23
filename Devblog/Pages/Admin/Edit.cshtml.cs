@@ -12,9 +12,12 @@ namespace Devblog.Pages.Admin
     public class EditModel : PageModel
     {
         private readonly IBlogView _blogView;
+        private readonly IPersonRepo _personRepo;
+        private readonly ITagRepo _tagRepo;
         public List<IPost> Posts { get; set; }
         public IPost Post { get; set; }
         public Tag Tag { get; set; }
+        public Person Account { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public Guid Id { get; set; }
@@ -22,10 +25,12 @@ namespace Devblog.Pages.Admin
         [BindProperty(SupportsGet = true)]
         public string Type { get; set; }
 
-        public EditModel(IBlogView blogView)
+        public EditModel(IBlogView blogView, ITagRepo tagRepo, IPersonRepo personRepo)
         {
             _blogView = blogView;
             Posts = new List<IPost>();
+            _tagRepo = tagRepo;
+            _personRepo = personRepo;
         }
 
         public IActionResult OnGet()
@@ -50,11 +55,20 @@ namespace Devblog.Pages.Admin
                     return NotFound();
                 }
             }
+            else if (Type == "Account")
+            {
+                Account = _personRepo.GetPersonById(Id);
+
+                if (Account == null)
+                {
+                    return NotFound();
+                }
+            }
 
             return Page();
         }
 
-        public IActionResult OnPost()
+        public IActionResult OnPostEditPost()
         {
             Guid postId = Guid.Parse(Request.Form["PostId"]);
             string PostTypes = Request.Form["PostType"];
@@ -64,7 +78,7 @@ namespace Devblog.Pages.Admin
             if (PostTypes == "BlogPost")
             {
                 string Weblog = Request.Form["Weblog"];
-                var blogPost = _blogView.GetPostById(postId) as BlogPost;
+                BlogPost blogPost = _blogView.GetPostById(postId) as BlogPost;
                 if (blogPost != null)
                 {
                     _blogView.UpdatePost(blogPost, Title, Reference, Weblog);
@@ -76,7 +90,7 @@ namespace Devblog.Pages.Admin
                 string Cons = Request.Form["Cons"];
                 if (short.TryParse(Request.Form["Stars"], out short Stars))
                 {
-                    var review = _blogView.GetPostById(postId) as Review;
+                    Review review = _blogView.GetPostById(postId) as Review;
                     if (review != null)
                     {
                         _blogView.UpdatePost(review, Title, Reference, Pros, Cons, Stars);
@@ -87,7 +101,7 @@ namespace Devblog.Pages.Admin
             {
                 string Description = Request.Form["Description"];
                 string Image = Request.Form["Image"];
-                var project = _blogView.GetPostById(postId) as Project;
+                Project project = _blogView.GetPostById(postId) as Project;
                 if (project != null)
                 {
                     _blogView.UpdatePost(project, Title, Reference, Description, Image);
@@ -95,6 +109,33 @@ namespace Devblog.Pages.Admin
             }
 
             return RedirectToPage("/Admin/Index");
+        }
+
+        public IActionResult OnPostEditTag()
+        {
+            Guid tagId = Guid.Parse(Request.Form["TagId"]);
+            string name = Request.Form["TagName"];
+
+            _tagRepo.UpdateTag(tagId, name);
+
+            return RedirectToPage("/Admin/Index");
+        }
+
+        public IActionResult OnPostEditAccount()
+        {
+            Person person = _personRepo.GetPersonById(Guid.Parse(Request.Form["AccountId"]));
+            string firstName = Request.Form["FirstName"];
+            string lastName = Request.Form["LastName"];
+            int age = Convert.ToInt32(Request.Form["Age"]);
+            string mail = Request.Form["Mail"];
+            string city = Request.Form["City"];
+            string phoneNumber = Request.Form["PhoneNumber"];
+            string password = Request.Form["Password"];
+            string fullName = firstName + " " + lastName;
+
+            _personRepo.UpdatePerson(person, firstName, lastName, fullName, age, mail, city, phoneNumber, password);
+
+            return RedirectToPage("/Admin/Accounts");
         }
     }
 }

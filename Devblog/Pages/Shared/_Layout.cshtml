@@ -19,6 +19,7 @@
                 @if (User.Identity.IsAuthenticated)
                 {
                     <a class="nav-link" asp-page="/Admin/Index">Admin Panel</a>
+                    <a class="nav-link" asp-page="/Admin/Accounts">Account Administration</a>
                     <form method="post" asp-page="/Logout" class="d-inline">
                         <button type="submit" class="nav-link btn btn-link">Logout</button>
                     </form>

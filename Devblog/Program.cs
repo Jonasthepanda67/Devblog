@@ -40,8 +40,7 @@ builder.Services.AddRazorPages().AddRazorPagesOptions(options =>
     options.Conventions.AuthorizeFolder("/admin");
 }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-builder.Services.AddSingleton<ILogin, Login>()
-    .AddSingleton<IRepo<BlogPost>, BlogPostRepo>()
+builder.Services.AddSingleton<IRepo<BlogPost>, BlogPostRepo>()
     .AddSingleton<IRepo<Review>, ReviewRepo>()
     .AddSingleton<IRepo<Project>, ProjectRepo>()
     .AddSingleton<IPersonRepo, PersonRepo>()

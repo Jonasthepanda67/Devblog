@@ -48,5 +48,54 @@ namespace Devblog_Library.Repositories
             _tags.Add(tag);
             return tag;
         }
+
+        public void DeleteTag(Tag tag)
+        {
+            SqlCommand cmd = new("sp_DeleteTag", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Tag_Id", SqlDbType.NVarChar).Value = tag.Id;
+
+            try
+            {
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (SqlException e)
+            {
+                //do error handling here
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+        public void UpdateTag(Guid Id, string NewName)
+        {
+            SqlCommand cmd = new("sp_UpdateTag", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Tag_Id", SqlDbType.NVarChar).Value = Id;
+            cmd.Parameters.AddWithValue("@Name", NewName);
+
+            try
+            {
+                if (con.State != ConnectionState.Open)
+                {
+                    con.Open();
+                }
+                cmd.ExecuteNonQuery();
+            }
+            catch (SqlException e)
+            {
+                //sgdggdgdji
+            }
+            finally
+            {
+                if (con.State == ConnectionState.Open)
+                {
+                    con.Close();
+                }
+            }
+        }
     }
 }

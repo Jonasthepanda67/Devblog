@@ -21,8 +21,6 @@ namespace Devblog_Library.Interfaces
 
         public IPost UpdatePost(Project post, string NewTitle, string NewReference, string NewDescription, string NewImage);
 
-        //public Post UpdatePost(Post post, string NewTitle, string NewReference);
-
         public void DeletePost(Guid id);
 
         public void AddTag(Tag tag, IPost post);

@@ -19,7 +19,6 @@ namespace Devblog.Pages
 
         public void OnGet()
         {
-            // Fetch all posts (BlogPosts and Reviews only)
             Posts = _blogView.LoadListOfPosts()
                              .Where(post => post.Type == PostType.BlogPost || post.Type == PostType.Review)
                              .OrderByDescending(p => p.Date)

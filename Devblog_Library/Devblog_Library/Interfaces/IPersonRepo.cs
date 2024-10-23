@@ -9,12 +9,16 @@ namespace Devblog_Library.Interfaces
 {
     public interface IPersonRepo
     {
-        public List<Person> People { get; }
+        public List<Person> UserAccounts { get; }
 
-        public Person CreatePerson(Person person);
+        public Person CreatePerson(string firstName, string lastName, int age, string mail, string city, string phoneNumber, string password);
 
-        public Person GetPersonDetails(string id);
+        public Person GetPersonById(Guid id);
 
-        public void LoadListOfPeople();
+        public List<Person> LoadListOfPeople();
+
+        public void DeletePerson(Person person);
+
+        public void UpdatePerson(Person person, string NewFirstName, string NewLastName, string NewFullName, int NewAge, string NewMail, string NewCity, string NewPhoneNumber, string NewPassword);
     }
 }

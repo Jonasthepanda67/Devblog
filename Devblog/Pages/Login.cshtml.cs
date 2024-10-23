@@ -13,19 +13,49 @@ namespace Devblog.Pages
     public class LoginModel : PageModel
     {
         private readonly IConfiguration configuration;
+        private readonly IPersonRepo _personRepo;
 
-        public LoginModel(IConfiguration configuration)
+        public LoginModel(IConfiguration configuration, IPersonRepo personRepo)
         {
             this.configuration = configuration;
+            _personRepo = personRepo;
         }
+
+        [BindProperty, Required]
+        public string UserName { get; set; }
+
+        [BindProperty, Required]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+
+        [BindProperty, Required]
+        [MaxLength(80)]
+        public string FirstName { get; set; }
+
+        [BindProperty, Required]
+        [MaxLength(100)]
+        public string LastName { get; set; }
+
+        [BindProperty, Required]
+        public int Age { get; set; }
 
         [BindProperty]
         [Required]
-        public string UserName { get; set; }
+        [MaxLength(120), EmailAddress]
+        public string Mail { get; set; }
 
-        [BindProperty, DataType(DataType.Password)]
-        [Required]
-        public string Password { get; set; }
+        [BindProperty, Required]
+        [MaxLength(70)]
+        public string City { get; set; }
+
+        [BindProperty, Required]
+        [DataType(DataType.PhoneNumber)]
+        [RegularExpression(@"^\+?\d{4,15}$", ErrorMessage = "Please enter a valid phone number.")]
+        public string PhoneNumber { get; set; }
+
+        [BindProperty, Required]
+        [MinLength(12), DataType(DataType.Password)]
+        public string ChosenPassword { get; set; }
 
         public string Message { get; set; }
 
@@ -41,19 +71,37 @@ namespace Devblog.Pages
                     var claims = new List<Claim> { new Claim(ClaimTypes.Name, UserName) };
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-                    // Sign in user
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
-                    // Check if there's a return URL and redirect there, or default to /admin/index
                     var returnUrl = Request.Query["ReturnUrl"].FirstOrDefault() ?? "/admin/index";
 
                     return Redirect(returnUrl);
                 }
             }
 
-            // Invalid login attempt
             Message = "Invalid attempt";
             return Page();
+        }
+
+        public IActionResult OnPostCreateAccount()
+        {
+            ModelState.Remove(nameof(UserName));
+            ModelState.Remove(nameof(Password));
+
+            if (Age < 18)
+            {
+                Message = "Age cannot be below 18";
+                return Page();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            _personRepo.CreatePerson(FirstName, LastName, Age, Mail, City, PhoneNumber, ChosenPassword);
+
+            return RedirectToPage("/Login");
         }
     }
 }
