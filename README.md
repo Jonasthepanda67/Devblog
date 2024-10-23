@@ -31,7 +31,7 @@ Welcome to my **Devblog** project. This is a school project that i have worked o
 - [ ] Add Light/Dark mode
  
 ## 🚧 Known Issues
-*Edit didn't work for review posts*
+*No know issues have appeared so far!*
  
 ## 🐞 Bug Reporting
 *Bug reporting isn't currently enabled for this project. If you encounter any issues, feel free to download the project and make your own improvements!*   
