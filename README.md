@@ -26,9 +26,9 @@ Welcome to my **Devblog** project. This is a school project that i have worked o
 - [X] Implement a soft delete function
 - [X] Create and use a database for all data
 - [X] Add User Accounts
-- [ ] Add Comments as a feature
 - [X] Add Account Administration
-- [ ] Add Admins
+- [X] Add Admins
+- [ ] Add Comments as a feature
 - [ ] Add Light/Dark mode
  
 ## 🚧 Known Issues
@@ -44,8 +44,14 @@ Welcome to my **Devblog** project. This is a school project that i have worked o
 [V1.3.0](https://github.com/Jonasthepanda67/Devblog/releases/tag/V1.3.0)
 - [V2.0.0](https://github.com/Jonasthepanda67/Devblog/releases/tag/V2.0.0)
 [V2.1.0](https://github.com/Jonasthepanda67/Devblog/releases/tag/V2.1.0)
+[V2.2.0](https://github.com/Jonasthepanda67/Devblog/releases/tag/V2.2.0)
 
 ## 📜 Changelog
+
+### **V2.2.0**
+- Added Admins and changed the way Authors are stored
+- Added UserType property to every user with 3 types: User, Admin and Author
+- Fixed slider not routing correctly when it was checked
 
 ### **V2.1.0**
 - Added User Accounts and administration of them
