@@ -24,9 +24,9 @@ Welcome to my **Devblog** project. This is a school project that i have worked o
 - [X] Use CRUD for handling posts
 - [X] Implement a soft delete function
 - [X] Create and use a database for all data
-- [ ] Add User Accounts
+- [X] Add User Accounts
 - [ ] Add Comments as a feature
-- [ ] Add Account Administration
+- [X] Add Account Administration
 - [ ] Add Admins
 - [ ] Add Light/Dark mode
  
@@ -42,8 +42,14 @@ Welcome to my **Devblog** project. This is a school project that i have worked o
 [V1.2.0](https://github.com/Jonasthepanda67/Devblog/releases/tag/V1.2.0)
 [V1.3.0](https://github.com/Jonasthepanda67/Devblog/releases/tag/V1.3.0)
 - [V2.0.0](https://github.com/Jonasthepanda67/Devblog/releases/tag/V2.0.0)
+[V2.1.0](https://github.com/Jonasthepanda67/Devblog/releases/tag/V2.1.0)
 
 ## 📜 Changelog
+
+### **V2.1.0**
+- Added User Accounts and administration of them
+- Fixed some issues with Tags
+- Changed a few properties to improve the overall user experience and administration
 
 ### **V2.0.0**
 - Changed from using files to storing all data in a local database
