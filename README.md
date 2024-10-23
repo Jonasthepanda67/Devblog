@@ -24,7 +24,8 @@ Welcome to my **Devblog** project. This is a school project that i have worked o
 - [X] Use CRUD for handling posts
 - [X] Implement a soft delete function
 - [X] Create and use a database for all data
-- [ ] Add Users and Comments as a feature
+- [ ] Add User Accounts
+- [ ] Add Comments as a feature
 - [ ] Add Account Administration
 - [ ] Add Admins
 - [ ] Add Light/Dark mode
