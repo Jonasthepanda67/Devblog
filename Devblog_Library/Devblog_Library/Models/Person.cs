@@ -17,12 +17,12 @@ namespace Devblog_Library.Models
         public int Age { get; set; }
         public string Mail { get; set; }
         public string City { get; set; }
-        public int PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
         public string Password { get; set; }
         public DateTime CreationDate { get; set; } = DateTime.Now;
         public bool IsAuthor { get; set; }
 
-        public Person(string firstName, string lastName, int age, string mail, string city, int phoneNumber, string password, bool isAuthor)
+        public Person(string firstName, string lastName, int age, string mail, string city, string phoneNumber, string password, bool isAuthor)
         {
             FirstName = firstName;
             LastName = lastName;

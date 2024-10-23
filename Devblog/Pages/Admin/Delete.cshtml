@@ -1,13 +1,26 @@
-﻿@page "{id:guid}"
+﻿@page "{id:guid}/{type}"
 @using Devblog_Library.Models
 @model Devblog.Pages.Admin.DeleteModel
 @{
 }
 
-<h2>Delete Tag</h2>
+@if (Model.Type == "Tag" & Model.Tag != null)
+{
+    <h2>Delete Tag</h2>
 
-<p>Are you sure you want to delete the @Model.Tag.Name Tag?</p>
-<button>Yes</button>
+    <p>Are you sure you want to delete the @Model.Tag.Name Tag?</p>
+    <form method="post">
+        <button type="submit" class="btn btn-danger">Yes</button>
+    </form>
+}
+else if (Model.Type == "Account" & Model.Account != null)
+{
+    <h2>Delete Account</h2>
 
+    <p>Are you sure you want to delete @Model.Account.FullName's Account?</p>
+    <form method="post">
+        <button type="submit" class="btn btn-danger">Yes</button>
+    </form>
+}
 
 <a asp-page="/Admin/Index">Back to Admin Panel</a>

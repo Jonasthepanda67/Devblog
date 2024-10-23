@@ -11,26 +11,62 @@ namespace Devblog.Pages.Admin
     {
         private readonly IBlogView _blogView;
         private readonly ITagRepo _tagRepo;
-        public Tag Tag { get; set; }
+        private readonly IPersonRepo _personRepo;
 
-        public DeleteModel(IBlogView blogView, ITagRepo tagRepo)
+        [BindProperty(SupportsGet = true)]
+        public Guid Id { get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string Type { get; set; }
+
+        public Tag Tag { get; set; }
+        public Person Account { get; set; }
+
+        public DeleteModel(IBlogView blogView, ITagRepo tagRepo, IPersonRepo personRepo)
         {
             _blogView = blogView;
             _tagRepo = tagRepo;
+            _personRepo = personRepo;
         }
 
-        public IActionResult OnGet(Guid id)
+        public IActionResult OnGet()
         {
-            Tag = _blogView.GetTagById(id);
-
-            if (Tag == null)
+            if (Type == "Tag")
             {
-                return NotFound();
+                Tag = _blogView.GetTagById(Id);
+
+                if (Tag == null)
+                {
+                    return NotFound();
+                }
+            }
+            else if (Type == "Account")
+            {
+                Account = _personRepo.GetPersonById(Id);
+
+                if (Account == null)
+                {
+                    return NotFound();
+                }
+
+                _personRepo.DeletePerson(Account);
             }
 
-            _tagRepo.DeleteTag(Tag);
-
             return Page();
+        }
+
+        public IActionResult OnPost()
+        {
+            if (Type == "Tag" & Tag != null)
+            {
+                _tagRepo.DeleteTag(Tag);
+            }
+            else if (Type == "Account" & Account != null)
+            {
+                _personRepo.DeletePerson(Account);
+            }
+
+            return RedirectToPage("/Admin/Index");
         }
     }
 }

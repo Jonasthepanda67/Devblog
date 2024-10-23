@@ -21,33 +21,40 @@ namespace Devblog.Pages
             _personRepo = personRepo;
         }
 
-        [BindProperty]
-        [Required]
+        [BindProperty, Required]
         public string UserName { get; set; }
 
-        [BindProperty, DataType(DataType.Password)]
-        [Required]
+        [BindProperty, Required]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        [BindProperty]
+        [BindProperty, Required]
+        [MaxLength(80)]
         public string FirstName { get; set; }
 
-        [BindProperty]
+        [BindProperty, Required]
+        [MaxLength(100)]
         public string LastName { get; set; }
 
-        [BindProperty]
+        [BindProperty, Required]
         public int Age { get; set; }
 
         [BindProperty]
+        [Required]
+        [MaxLength(120), EmailAddress]
         public string Mail { get; set; }
 
-        [BindProperty]
+        [BindProperty, Required]
+        [MaxLength(70)]
         public string City { get; set; }
 
-        [BindProperty]
-        public int PhoneNumber { get; set; }
+        [BindProperty, Required]
+        [DataType(DataType.PhoneNumber)]
+        [RegularExpression(@"^\+?\d{4,15}$", ErrorMessage = "Please enter a valid phone number.")]
+        public string PhoneNumber { get; set; }
 
-        [BindProperty]
+        [BindProperty, Required]
+        [MinLength(12), DataType(DataType.Password)]
         public string ChosenPassword { get; set; }
 
         public string Message { get; set; }
@@ -81,12 +88,18 @@ namespace Devblog.Pages
             ModelState.Remove(nameof(UserName));
             ModelState.Remove(nameof(Password));
 
+            if (Age < 18)
+            {
+                Message = "Age cannot be below 18";
+                return Page();
+            }
+
             if (!ModelState.IsValid)
             {
                 return Page();
             }
 
-            _personRepo.CreatePerson(FirstName, LastName, Age, Mail, City, PhoneNumber, Password);
+            _personRepo.CreatePerson(FirstName, LastName, Age, Mail, City, PhoneNumber, ChosenPassword);
 
             return RedirectToPage("/Login");
         }

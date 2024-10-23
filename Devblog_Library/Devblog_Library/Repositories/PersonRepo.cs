@@ -24,21 +24,21 @@ namespace Devblog_Library.Repositories
             UserAccounts = LoadListOfPeople();
         }
 
-        public Person CreatePerson(string firstName, string lastName, int age, string mail, string city, int phoneNumber, string password)
+        public Person CreatePerson(string firstName, string lastName, int age, string mail, string city, string phoneNumber, string password)
         {
             Person person = new Person(firstName, lastName, age, mail, city, phoneNumber, password, false);
 
             SqlCommand cmd = new("sp_CreateUserAccount", con);
             cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@Post_Id", SqlDbType.NVarChar).Value = person.Id;
-            cmd.Parameters.AddWithValue("@FName", firstName);
-            cmd.Parameters.AddWithValue("@LName", lastName);
-            cmd.Parameters.AddWithValue("@FullName", person.FullName);
+            cmd.Parameters.AddWithValue("@Person_Id", SqlDbType.NVarChar).Value = person.Id;
+            cmd.Parameters.AddWithValue("@FName", SqlDbType.NVarChar).Value = firstName;
+            cmd.Parameters.AddWithValue("@LName", SqlDbType.NVarChar).Value = lastName;
+            cmd.Parameters.AddWithValue("@FullName", SqlDbType.NVarChar).Value = person.FullName;
             cmd.Parameters.AddWithValue("@Age", age);
             cmd.Parameters.AddWithValue("@Mail", mail);
             cmd.Parameters.AddWithValue("@City", city);
-            cmd.Parameters.AddWithValue("@Number", phoneNumber);
-            cmd.Parameters.AddWithValue("@Password", password);
+            cmd.Parameters.AddWithValue("@Number", SqlDbType.NVarChar).Value = phoneNumber;
+            cmd.Parameters.AddWithValue("@Password", SqlDbType.NVarChar).Value = password;
             cmd.Parameters.AddWithValue("@CreationDate", person.CreationDate);
             try
             {
@@ -88,7 +88,7 @@ namespace Devblog_Library.Repositories
                             age: Convert.ToInt32(reader["Age"]),
                             mail: reader["Mail"].ToString(),
                             city: reader["City"].ToString(),
-                            phoneNumber: Convert.ToInt32(reader["Number"]),
+                            phoneNumber: reader["Number"].ToString(),
                             password: reader["Password"].ToString(),
                             isAuthor: reader.GetBoolean(reader.GetOrdinal("IsAuthor"))
                         )
@@ -112,6 +112,85 @@ namespace Devblog_Library.Repositories
                 }
             }
             return userAccounts;
+        }
+
+        public void DeletePerson(Person person)
+        {
+            SqlCommand cmd = new("sp_DeleteUserAccount", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Person_Id", SqlDbType.NVarChar).Value = person.Id;
+
+            try
+            {
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+            catch (SqlException e)
+            {
+                //do error handling here
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+        public void UpdatePerson(Person person, string NewFirstName, string NewLastName, string NewFullName, int NewAge, string NewMail, string NewCity, string NewPhoneNumber, string NewPassword)
+        {
+            SqlCommand cmd = new("sp_UpdateUserAccount", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@Person_Id", SqlDbType.NVarChar).Value = person.Id;
+            if (!string.IsNullOrEmpty(NewFirstName))
+                cmd.Parameters.AddWithValue("@FName", NewFirstName);
+            else
+                cmd.Parameters.AddWithValue("@FName", person.FirstName);
+            if (!string.IsNullOrEmpty(NewLastName))
+                cmd.Parameters.AddWithValue("@LName", NewLastName);
+            else
+                cmd.Parameters.AddWithValue("@LName", person.LastName);
+            if (!string.IsNullOrEmpty(NewFullName))
+                cmd.Parameters.AddWithValue("@FullName", NewFullName);
+            else
+                cmd.Parameters.AddWithValue("@FullName", person.FullName);
+            if (!string.IsNullOrEmpty(NewAge.ToString()))
+                cmd.Parameters.AddWithValue("@Age", NewAge);
+            else
+                cmd.Parameters.AddWithValue("@Age", person.Age);
+            if (!string.IsNullOrEmpty(NewMail))
+                cmd.Parameters.AddWithValue("@Mail", NewMail);
+            else
+                cmd.Parameters.AddWithValue("@Mail", person.Mail);
+            if (!string.IsNullOrEmpty(NewCity))
+                cmd.Parameters.AddWithValue("@City", NewCity);
+            else
+                cmd.Parameters.AddWithValue("@City", person.City);
+            if (!string.IsNullOrEmpty(NewPhoneNumber))
+                cmd.Parameters.AddWithValue("@Number", NewPhoneNumber);
+            else
+                cmd.Parameters.AddWithValue("@Number", person.PhoneNumber);
+            if (!string.IsNullOrEmpty(NewPassword))
+                cmd.Parameters.AddWithValue("@Password", NewPassword);
+            else
+                cmd.Parameters.AddWithValue("@Password", person.Password);
+            try
+            {
+                if (con.State != ConnectionState.Open)
+                {
+                    con.Open();
+                }
+                cmd.ExecuteNonQuery();
+            }
+            catch (SqlException e)
+            {
+                //sgdggdgdji
+            }
+            finally
+            {
+                if (con.State == ConnectionState.Open)
+                {
+                    con.Close();
+                }
+            }
         }
     }
 }

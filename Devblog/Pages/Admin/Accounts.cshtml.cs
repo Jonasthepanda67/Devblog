@@ -24,7 +24,7 @@ namespace Devblog.Pages.Admin
 
         public IActionResult OnPostDelete()
         {
-            return RedirectToPage("/Accounts");
+            return RedirectToPage("/Admin/Accounts");
         }
     }
 }
