@@ -20,13 +20,14 @@ Person_Id UniqueIdentifier NOT NULL,
 Fname nvarchar(80) NOT NULL,
 Lname nvarchar(100) NOT NULL,
 FullName nvarchar(181) NOT NULL,
+UserName nvarchar(18) UNIQUE NOT NULL,
 Age int NOT NULL,
 Mail nvarchar(120) NOT NULL,
 City nvarchar(70) NOT NULL,
 Number nvarchar(30) NOT NULL,
 Password nvarchar(200) NOT NULL,
 CreationDate DATETIME NOT NULL DEFAULT CAST( GETDATE() AS DATE),
-IsAuthor bit NOT NULL DEFAULT 0
+UserType nvarchar(10) NOT NULL DEFAULT 'User'
 )
 
 CREATE TABLE PostTable
@@ -86,10 +87,10 @@ GO
 --------------------------------------------------------
 
 INSERT INTO PersonTable
-(Person_Id, Fname,Lname, FullName, Age, Mail, City, Number, Password, IsAuthor)
+(Person_Id, Fname,Lname, FullName, UserName, Age, Mail, City, Number, Password, UserType)
 VALUES
 
-('37c13ea0-02f1-4bae-b598-620e0642e666', 'Jonas', 'Petersen', 'Jonas Petersen', '19', 'jonasfpetersen1@gmail.com', 'Nordborg', '+4542766861', 'password123', 1)
+('37c13ea0-02f1-4bae-b598-620e0642e666', 'Jonas', 'Petersen', 'Jonas Petersen', 'Jonasthepanda', '19', 'jonasfpetersen1@gmail.com', 'Nordborg', '+4542766861', 'AQAAAAIAAYagAAAAEFfKkNmSMSMTXfgjpUmVwhSpLSYHNHlSRZACrHEaIjuKwPPwRIxecxiuKCB6+8u9YA==', 'Author')
 GO
 
 INSERT INTO PostTable
@@ -335,6 +336,7 @@ CREATE PROCEDURE sp_CreateUserAccount
 @FName nvarchar(80),
 @Lname nvarchar(100),
 @FullName nvarchar(181),
+@UserName nvarchar(18),
 @Age int,
 @Mail nvarchar(120),
 @City nvarchar(70),
@@ -342,7 +344,7 @@ CREATE PROCEDURE sp_CreateUserAccount
 @Password nvarchar(200),
 @CreationDate DATETIME
 AS
-INSERT INTO PersonTable(Person_Id, Fname, Lname, FullName, Age, Mail, City, Number, Password, CreationDate) VALUES (@Person_Id, @FName, @Lname, @FullName, @Age, @Mail, @City, @Number, @Password, @CreationDate)
+INSERT INTO PersonTable(Person_Id, Fname, Lname, FullName, UserName, Age, Mail, City, Number, Password, CreationDate) VALUES (@Person_Id, @FName, @Lname, @FullName, @UserName, @Age, @Mail, @City, @Number, @Password, @CreationDate)
 GO
 
 CREATE PROCEDURE sp_DeleteUserAccount
@@ -360,11 +362,12 @@ CREATE PROCEDURE sp_UpdateUserAccount
 @Mail nvarchar(120),
 @City nvarchar(70),
 @Number nvarchar(30),
-@Password nvarchar(200)
+@Password nvarchar(200),
+@UserType nvarchar(10)
 AS
 BEGIN
 	UPDATE PersonTable
-    SET Fname = @FName, Lname = @Lname, FullName = @FullName, Age = @Age, Mail = @Mail, City = @City, Number = @Number, Password = @Password
+    SET Fname = @FName, Lname = @Lname, FullName = @FullName, Age = @Age, Mail = @Mail, City = @City, Number = @Number, Password = @Password, UserType = @UserType
     WHERE Person_Id = @Person_Id
 END
 GO
@@ -413,16 +416,15 @@ GO
 
 ------------------------------------------------------
 -- Index for faster querying on Post_Id
-CREATE UNIQUE INDEX IX_PostTable_Post_Id ON PostTable (Post_Id);
-CREATE UNIQUE INDEX IX_BlogPostTable_Post_Id ON BlogPostTable (Post_Id);
-CREATE UNIQUE INDEX IX_ReviewTable_Post_Id ON ReviewTable (Post_Id);
-CREATE UNIQUE INDEX IX_ProjectTable_Post_Id ON ProjectTable (Post_Id);
-CREATE UNIQUE INDEX IX_TagListTable_Post_Id ON TagListTable (Post_Id);
+CREATE UNIQUE INDEX UIX_PostTable_Post_Id ON PostTable (Post_Id);
+CREATE UNIQUE INDEX UIX_BlogPostTable_Post_Id ON BlogPostTable (Post_Id);
+CREATE UNIQUE INDEX UIX_ReviewTable_Post_Id ON ReviewTable (Post_Id);
+CREATE UNIQUE INDEX UIX_ProjectTable_Post_Id ON ProjectTable (Post_Id);
+CREATE UNIQUE INDEX UIX_TagListTable_Post_Id ON TagListTable (Post_Id);
 
 -- Index for Tag_Id in TagListTable
 CREATE INDEX IX_TagListTable_Tag_Id ON TagListTable (Tag_Id);
 
 -- Index for Mail in PersonTable
 CREATE INDEX IX_PersonTable_Mail ON PersonTable (Mail);
-
 ------------------------------------------------------
