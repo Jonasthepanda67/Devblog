@@ -19,24 +19,27 @@
     </div>
     @foreach (Person account in Model.Accounts)
     {
-        <div class="account-row">
-            <div class="account-column name">@account.FullName</div>
-            <div class="account-column age">@account.Age</div>
-            <div class="account-column mail">@account.Mail</div>
-            <div class="account-column city">@account.City</div>
-            <div class="account-column phone">@account.PhoneNumber</div>
+        if (account.UserType != "Author")
+            {
+                <div class="account-row">
+                    <div class="account-column name">@account.FullName</div>
+                    <div class="account-column age">@account.Age</div>
+                    <div class="account-column mail">@account.Mail</div>
+                    <div class="account-column city">@account.City</div>
+                    <div class="account-column phone">@account.PhoneNumber</div>
 
-            @{
-                var formattedDate = account.CreationDate.ToString("MMMM dd, yyyy");
-                var capitalizedDate = char.ToUpper(formattedDate[0]) + formattedDate.Substring(1);
+                    @{
+                        var formattedDate = account.CreationDate.ToString("MMMM dd, yyyy");
+                        var capitalizedDate = char.ToUpper(formattedDate[0]) + formattedDate.Substring(1);
+                    }
+                    <div class="account-column date">@capitalizedDate</div>
+
+                    <div class="account-column account-actions">
+                        <a class="btn btn-warning" asp-page="/Admin/Edit" asp-route-id="@account.Id" asp-route-type="Account">Edit</a>
+                        <a class="btn btn-danger" asp-page="/Admin/Delete" asp-route-id="@account.Id" asp-route-type="Account">Delete</a>
+                    </div>
+                </div>
             }
-            <div class="account-column date">@capitalizedDate</div>
-
-            <div class="account-column account-actions">
-                <a class="btn btn-warning" asp-page="/Admin/Edit" asp-route-id="@account.Id" asp-route-type="Account">Edit</a>
-                <a class="btn btn-danger" asp-page="/Admin/Delete" asp-route-id="@account.Id" asp-route-type="Account">Delete</a>
-            </div>
-        </div>
     }
     </div>
 </div>

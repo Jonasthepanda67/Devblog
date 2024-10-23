@@ -5,19 +5,25 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using static System.Net.Mime.MediaTypeNames;
 using System.Security.Cryptography.Xml;
+using System.Security.Claims;
 
 namespace Devblog.Pages.Admin
 {
     [Authorize]
     public class EditModel : PageModel
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IBlogView _blogView;
         private readonly IPersonRepo _personRepo;
         private readonly ITagRepo _tagRepo;
+        public string UserRole { get; private set; }
         public List<IPost> Posts { get; set; }
         public IPost Post { get; set; }
         public Tag Tag { get; set; }
         public Person Account { get; set; }
+
+        [BindProperty]
+        public string UserType { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public Guid Id { get; set; }
@@ -25,12 +31,15 @@ namespace Devblog.Pages.Admin
         [BindProperty(SupportsGet = true)]
         public string Type { get; set; }
 
-        public EditModel(IBlogView blogView, ITagRepo tagRepo, IPersonRepo personRepo)
+        public EditModel(IHttpContextAccessor httpContextAccessor, IBlogView blogView, ITagRepo tagRepo, IPersonRepo personRepo)
         {
+            _httpContextAccessor = httpContextAccessor;
             _blogView = blogView;
             Posts = new List<IPost>();
             _tagRepo = tagRepo;
             _personRepo = personRepo;
+
+            UserType = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role)?.Value;
         }
 
         public IActionResult OnGet()
@@ -132,8 +141,12 @@ namespace Devblog.Pages.Admin
             string phoneNumber = Request.Form["PhoneNumber"];
             string password = Request.Form["Password"];
             string fullName = firstName + " " + lastName;
+            if (string.IsNullOrEmpty(UserType))
+            {
+                UserType = "User";
+            }
 
-            _personRepo.UpdatePerson(person, firstName, lastName, fullName, age, mail, city, phoneNumber, password);
+            _personRepo.UpdatePerson(person, firstName, lastName, fullName, age, mail, city, phoneNumber, password, UserType);
 
             return RedirectToPage("/Admin/Accounts");
         }

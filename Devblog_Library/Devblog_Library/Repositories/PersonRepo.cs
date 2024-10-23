@@ -1,4 +1,5 @@
-﻿using Devblog_Library.Interfaces;
+﻿using Azure.Identity;
+using Devblog_Library.Interfaces;
 using Devblog_Library.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -24,9 +25,9 @@ namespace Devblog_Library.Repositories
             UserAccounts = LoadListOfPeople();
         }
 
-        public Person CreatePerson(string firstName, string lastName, int age, string mail, string city, string phoneNumber, string password)
+        public Person CreatePerson(string firstName, string lastName, string userName, int age, string mail, string city, string phoneNumber, string password)
         {
-            Person person = new Person(firstName, lastName, age, mail, city, phoneNumber, password, false);
+            Person person = new Person(firstName, lastName, userName, age, mail, city, phoneNumber, password);
 
             SqlCommand cmd = new("sp_CreateUserAccount", con);
             cmd.CommandType = CommandType.StoredProcedure;
@@ -34,6 +35,7 @@ namespace Devblog_Library.Repositories
             cmd.Parameters.AddWithValue("@FName", SqlDbType.NVarChar).Value = firstName;
             cmd.Parameters.AddWithValue("@LName", SqlDbType.NVarChar).Value = lastName;
             cmd.Parameters.AddWithValue("@FullName", SqlDbType.NVarChar).Value = person.FullName;
+            cmd.Parameters.AddWithValue("@UserName", userName);
             cmd.Parameters.AddWithValue("@Age", age);
             cmd.Parameters.AddWithValue("@Mail", mail);
             cmd.Parameters.AddWithValue("@City", city);
@@ -63,6 +65,12 @@ namespace Devblog_Library.Repositories
             return userAccounts.Find(p => p.Id == id);
         }
 
+        public Person GetPersonByUserName(string userName)
+        {
+            List<Person> userAccounts = LoadListOfPeople();
+            return userAccounts.Find(p => p.UserName == userName);
+        }
+
         public List<Person> LoadListOfPeople()
         {
             List<Person> userAccounts = new List<Person>();
@@ -85,16 +93,17 @@ namespace Devblog_Library.Repositories
                         Person person = new Person(
                             firstName: reader["FName"].ToString(),
                             lastName: reader["LName"].ToString(),
+                            userName: reader["UserName"].ToString(),
                             age: Convert.ToInt32(reader["Age"]),
                             mail: reader["Mail"].ToString(),
                             city: reader["City"].ToString(),
                             phoneNumber: reader["Number"].ToString(),
-                            password: reader["Password"].ToString(),
-                            isAuthor: reader.GetBoolean(reader.GetOrdinal("IsAuthor"))
+                            password: reader["Password"].ToString()
                         )
                         {
                             Id = Guid.Parse(reader["Person_Id"].ToString()),
-                            CreationDate = DateTime.Parse(reader["CreationDate"].ToString())
+                            CreationDate = DateTime.Parse(reader["CreationDate"].ToString()),
+                            UserType = reader["UserType"].ToString()
                         };
                         userAccounts.Add(person);
                     }
@@ -135,7 +144,7 @@ namespace Devblog_Library.Repositories
             }
         }
 
-        public void UpdatePerson(Person person, string NewFirstName, string NewLastName, string NewFullName, int NewAge, string NewMail, string NewCity, string NewPhoneNumber, string NewPassword)
+        public void UpdatePerson(Person person, string NewFirstName, string NewLastName, string NewFullName, int NewAge, string NewMail, string NewCity, string NewPhoneNumber, string NewPassword, string NewUserType)
         {
             SqlCommand cmd = new("sp_UpdateUserAccount", con);
             cmd.CommandType = CommandType.StoredProcedure;
@@ -172,6 +181,11 @@ namespace Devblog_Library.Repositories
                 cmd.Parameters.AddWithValue("@Password", NewPassword);
             else
                 cmd.Parameters.AddWithValue("@Password", person.Password);
+            if (person.UserType != NewUserType)
+            {
+                cmd.Parameters.AddWithValue("@UserType", NewUserType);
+            }
+
             try
             {
                 if (con.State != ConnectionState.Open)

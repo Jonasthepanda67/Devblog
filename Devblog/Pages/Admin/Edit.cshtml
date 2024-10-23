@@ -1,8 +1,11 @@
 ﻿@page "{id:guid}/{type}"
 @using Devblog_Library.Models
+@using System.Security.Claims
 @model Devblog.Pages.Admin.EditModel
 @{
+    var userRole = Model.UserType;
 }
+
 
 <body>
     @if (Model.Type == "Post" && Model.Post != null)
@@ -133,6 +136,27 @@
                         <input class="form-control" name="Password" value="" />
                     </div>
 
+                    @if (userRole == "Author")
+                    {
+                        <div class="form-group mb-3">
+                            <label>UserType: </label>
+                            <label>
+                                <input name="UserType" id="User" value="User" type="radio" /> User
+                            </label>
+                            <span class="alert-danger" asp-validation-for="UserType"></span>
+
+                            <label>
+                                <input name="UserType" id="Admin" value="Admin" type="radio" /> Admin
+                            </label>
+                            <span class="alert-danger" asp-validation-for="UserType"></span>
+
+                            <label>
+                                <input name="UserType" id="Author" value="Author" type="radio" /> Author
+                            </label>
+                            <span class="alert-danger" asp-validation-for="UserType"></span>
+                        </div>
+                    }
+
                     <div class="text-center mt-4">
                         <button type="submit" class="btn btn-success font-weight-bold">Save Changes</button>
                         <a class="btn btn-primary font-weight-bold" asp-page="/Admin/Accounts">Back to Account Administration</a>
@@ -142,4 +166,3 @@
         </form>
     }
 </body>
-

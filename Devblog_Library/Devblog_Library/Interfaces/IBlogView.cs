@@ -33,8 +33,6 @@ namespace Devblog_Library.Interfaces
 
         public List<Tag> LoadListOfTags();
 
-        public void SetAuthor();
-
         public List<IPost> LoadListOfPosts();
 
         public IPost GetPostById(Guid id);
