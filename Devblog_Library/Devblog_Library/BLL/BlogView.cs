@@ -538,16 +538,6 @@ namespace Devblog_Library.BLL
             return tags;
         }
 
-        public void SetAuthor()
-        {
-            Author = _personRepo.UserAccounts.Find(p => p.IsAuthor == true);
-            if (Author is null)
-            {
-                _personRepo.LoadListOfPeople();
-                SetAuthor();
-            }
-        }
-
         public IPost GetPostById(Guid id)
         {
             List<IPost> posts = LoadListOfPosts();

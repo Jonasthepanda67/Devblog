@@ -34,6 +34,8 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.Cookie.Path = "/";  // Ensure cookie is valid for the entire site
     });
 
+builder.Services.AddHttpContextAccessor();
+
 // Add services to the container.
 builder.Services.AddRazorPages().AddRazorPagesOptions(options =>
 {

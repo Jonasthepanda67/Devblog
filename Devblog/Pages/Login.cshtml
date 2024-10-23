@@ -4,6 +4,7 @@
     ViewData["Title"] = "Login";
 }
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
+
 <body>
     <div class="message-container">
         @Model.Message
@@ -46,6 +47,11 @@
                             <label>Last Name:</label>
                             <input type="text" asp-for="LastName" class="form-control" autocomplete="off" />
                             <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label>UserName:</label>
+                            <input type="text" asp-for="ChosenUserName" class="form-control" autocomplete="off" />
+                            <span asp-validation-for="ChosenUserName" class="text-danger"></span>
                         </div>
                         <div class="mb-3">
                             <label>Age:</label>

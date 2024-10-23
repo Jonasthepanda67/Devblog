@@ -16,6 +16,9 @@ namespace Devblog.Pages.Admin
         public List<Tag> Tags { get; set; }
         public string SelectedPostType { get; set; }
 
+        [BindProperty(SupportsGet = true)]
+        public string Type { get; set; }
+
         public IndexModel(IBlogView blogView)
         {
             _blogView = blogView;

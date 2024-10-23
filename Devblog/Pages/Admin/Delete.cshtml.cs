@@ -48,8 +48,6 @@ namespace Devblog.Pages.Admin
                 {
                     return NotFound();
                 }
-
-                _personRepo.DeletePerson(Account);
             }
 
             return Page();
@@ -64,6 +62,7 @@ namespace Devblog.Pages.Admin
             else if (Type == "Account" & Account != null)
             {
                 _personRepo.DeletePerson(Account);
+                return RedirectToPage("/Admin/Accounts");
             }
 
             return RedirectToPage("/Admin/Index");

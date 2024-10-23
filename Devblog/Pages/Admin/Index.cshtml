@@ -1,8 +1,10 @@
-﻿@page
+﻿@page "{type?}"
 @using Devblog_Library.Models
 @model Devblog.Pages.Admin.IndexModel
 @{
     var postTypes = Enum.GetNames(typeof(PostType));
+    string Type = RouteData.Values["type"]?.ToString();
+    bool isTag = Type == "Tag";
 }
 
 <head>
@@ -13,11 +15,12 @@
     <h2 class="text-center mt-4">Admin Panel</h2>
 
     <div class="slider-container">
-        <input type="checkbox" id="toggle-slider" class="toggle-slider">
+        <input type="checkbox" id="toggle-slider" class="toggle-slider" @(isTag ? "checked" : "")>
         <label for="toggle-slider" class="slider-label"></label>
     </div>
 
-    <div id="content-left" class="content">
+    <!-- Content for Posts -->
+    <div id="content-left" class="content @(isTag ? "hidden" : "")">
         <div class="container mt-4">
             <div class="row mb-4">
                 <div class="col-md-4">
@@ -77,11 +80,12 @@
         </div>
     </div>
 
-    <div id="content-right" class="content hidden">
+    <!-- Content for Tags -->
+    <div id="content-right" class="content @(isTag ? "" : "hidden")">
         <div class="container mt-4">
             <div class="row mb-4">
                 <div class="col-md-4">
-                    <a class="btn btn-primary" asp-page="/Admin/Create">Create New Tag</a>
+                    <a class="btn btn-primary" asp-page="/Admin/Create" asp-route-type="Tag">Create New Tag</a>
                 </div>
             </div>
 
@@ -105,13 +109,21 @@
         </div>
     </div>
 
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const toggleSlider = document.getElementById('toggle-slider');
             const contentLeft = document.getElementById('content-left');
             const contentRight = document.getElementById('content-right');
+
+            // Hide/show content based on slider's initial state
+            if (toggleSlider.checked) {
+                contentLeft.classList.add('hidden');
+                contentRight.classList.remove('hidden');
+            } else {
+                contentLeft.classList.remove('hidden');
+                contentRight.classList.add('hidden');
+            }
 
             toggleSlider.addEventListener('change', function () {
                 if (toggleSlider.checked) {

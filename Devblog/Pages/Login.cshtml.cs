@@ -57,24 +57,32 @@ namespace Devblog.Pages
         [MinLength(12), DataType(DataType.Password)]
         public string ChosenPassword { get; set; }
 
+        [BindProperty, Required]
+        [MaxLength(18)]
+        public string ChosenUserName { get; set; }
+
         public string Message { get; set; }
 
         public async Task<IActionResult> OnPost()
         {
-            var user = configuration.GetSection("SiteUser").Get<SiteUser>();
+            var user = _personRepo.GetPersonByUserName(UserName); // Fetch user details from the database
 
-            if (UserName == user.UserName)
+            if (user != null)
             {
                 var passwordHasher = new PasswordHasher<string>();
                 if (passwordHasher.VerifyHashedPassword(null, user.Password, Password) == PasswordVerificationResult.Success)
                 {
-                    var claims = new List<Claim> { new Claim(ClaimTypes.Name, UserName) };
+                    // Create claims
+                    var claims = new List<Claim> {
+                new Claim(ClaimTypes.Name, UserName),
+                new Claim(ClaimTypes.Role, user.UserType) // Add the role to claims
+            };
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
+                    // Sign in the user
                     await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
                     var returnUrl = Request.Query["ReturnUrl"].FirstOrDefault() ?? "/admin/index";
-
                     return Redirect(returnUrl);
                 }
             }
@@ -99,7 +107,7 @@ namespace Devblog.Pages
                 return Page();
             }
 
-            _personRepo.CreatePerson(FirstName, LastName, Age, Mail, City, PhoneNumber, ChosenPassword);
+            _personRepo.CreatePerson(FirstName, LastName, ChosenUserName, Age, Mail, City, PhoneNumber, ChosenPassword);
 
             return RedirectToPage("/Login");
         }

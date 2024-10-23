@@ -201,7 +201,7 @@ namespace Devblog.Pages.Admin
 
             _tagRepo.CreateTag(TagName);
 
-            return RedirectToPage("/Admin/Index");
+            return RedirectToPage("/Admin/Index", new { type = "Tag" });
         }
     }
 }
