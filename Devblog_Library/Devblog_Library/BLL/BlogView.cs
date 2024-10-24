@@ -19,20 +19,21 @@ namespace Devblog_Library.BLL
         private SqlCommand cmd;
 
         public Person Author { get; set; }
-        private List<IPost> _posts = [];
-        private List<Tag> _tags = [];
+        private List<IPost> _posts = new();
+        private List<Tag> _tags = new();
         private readonly IRepo<BlogPost> _blogPostRepo;
         private readonly IRepo<Project> _projectRepo;
         private readonly IRepo<Review> _reviewRepo;
-        private readonly IPersonRepo _personRepo;
+        private readonly ICommentRepo _commentRepo;
 
-        public BlogView(IConfiguration configuration, IRepo<BlogPost> blogPostRepo, IRepo<Project> projectRepo, IRepo<Review> reviewRepo)
+        public BlogView(IConfiguration configuration, IRepo<BlogPost> blogPostRepo, IRepo<Project> projectRepo, IRepo<Review> reviewRepo, ICommentRepo commentRepo)
         {
             string conStr = configuration.GetConnectionString("MainConnection");
             con = new SqlConnection(conStr);
             _blogPostRepo = blogPostRepo;
             _projectRepo = projectRepo;
             _reviewRepo = reviewRepo;
+            _commentRepo = commentRepo;
             _posts = LoadListOfPosts();
             _tags = LoadListOfTags();
         }
@@ -312,6 +313,7 @@ namespace Devblog_Library.BLL
                                 IsDeleted = reader.GetBoolean(reader.GetOrdinal("Isdeleted"))
                             };
                             blogPost.Tags = GetTagsForPost(blogPost.Id);
+                            blogPost.Comments = GetCommentsForPost(blogPost.Id);
                             posts.Add(blogPost);
                         }
                         else if (postType == "Project")
@@ -329,6 +331,7 @@ namespace Devblog_Library.BLL
                                 IsDeleted = reader.GetBoolean(reader.GetOrdinal("Isdeleted"))
                             };
                             project.Tags = GetTagsForPost(project.Id);
+                            project.Comments = GetCommentsForPost(project.Id);
                             posts.Add(project);
                         }
                         else if (postType == "Review")
@@ -347,6 +350,7 @@ namespace Devblog_Library.BLL
                                 IsDeleted = reader.GetBoolean(reader.GetOrdinal("Isdeleted"))
                             };
                             review.Tags = GetTagsForPost(review.Id);
+                            review.Comments = GetCommentsForPost(review.Id);
                             posts.Add(review);
                         }
                     }
@@ -586,6 +590,21 @@ namespace Devblog_Library.BLL
             };
 
             return Tags;
+        }
+
+        public List<Comment> GetCommentsForPost(Guid postId)
+        {
+            List<Comment> Comments = new();
+            List<Comment> comments = _commentRepo.LoadListOfComments();
+
+            foreach (Comment comment in comments)
+            {
+                if (comment.PostId == postId)
+                {
+                    Comments.Add(comment);
+                }
+            }
+            return Comments;
         }
     }
 }

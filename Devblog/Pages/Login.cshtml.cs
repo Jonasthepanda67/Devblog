@@ -7,11 +7,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
+using Microsoft.Data.SqlClient;
+using System.Runtime.Versioning;
 
 namespace Devblog.Pages
 {
     public class LoginModel : PageModel
     {
+        private readonly SqlConnection con;
         private readonly IConfiguration configuration;
         private readonly IPersonRepo _personRepo;
 
@@ -19,6 +22,8 @@ namespace Devblog.Pages
         {
             this.configuration = configuration;
             _personRepo = personRepo;
+            string conStr = configuration.GetConnectionString("MainConnection");
+            con = new SqlConnection(conStr);
         }
 
         [BindProperty, Required]
@@ -65,28 +70,44 @@ namespace Devblog.Pages
 
         public async Task<IActionResult> OnPost()
         {
-            var user = _personRepo.GetPersonByUserName(UserName); // Fetch user details from the database
+            string query = "SELECT UserName, Password, UserType FROM PersonTable WHERE UserName = @username";
 
-            if (user != null)
+            SqlCommand cmd = new(query, con);
+
+            cmd.Parameters.AddWithValue("@username", UserName);
+
+            await con.OpenAsync();
+
+            using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
             {
-                var passwordHasher = new PasswordHasher<string>();
-                if (passwordHasher.VerifyHashedPassword(null, user.Password, Password) == PasswordVerificationResult.Success)
+                if (await reader.ReadAsync())
                 {
-                    // Create claims
-                    var claims = new List<Claim> {
-                new Claim(ClaimTypes.Name, UserName),
-                new Claim(ClaimTypes.Role, user.UserType) // Add the role to claims
-            };
-                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    string hashedPassword = reader["Password"].ToString();
+                    string userType = reader["UserType"].ToString();
 
-                    // Sign in the user
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+                    var passwordHasher = new PasswordHasher<string>();
+                    if (passwordHasher.VerifyHashedPassword(null, hashedPassword, Password) == PasswordVerificationResult.Success)
+                    {
+                        // Create claims
+                        var claims = new List<Claim>
+                        {
+                            new Claim(ClaimTypes.Name, UserName),
+                            new Claim(ClaimTypes.Role, userType) // Add the role to claims
+                        };
 
-                    var returnUrl = Request.Query["ReturnUrl"].FirstOrDefault() ?? "/admin/index";
-                    return Redirect(returnUrl);
+                        var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                        // Sign in the user
+                        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+
+                        // Redirect to the specified or default page
+                        var returnUrl = Request.Query["ReturnUrl"].FirstOrDefault() ?? "/admin/index";
+                        return Redirect(returnUrl);
+                    }
                 }
             }
 
+            // If we reach here, it means authentication failed
             Message = "Invalid attempt";
             return Page();
         }

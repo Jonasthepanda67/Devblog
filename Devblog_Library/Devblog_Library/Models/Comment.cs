@@ -9,15 +9,17 @@ namespace Devblog_Library.Models
     public class Comment
     {
         public Guid Id { get; set; } = Guid.NewGuid();
-        public Person User { get; set; }
+        public Guid PostId { get; set; }
+        public string UserName { get; set; }
         public string Message { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime CreationDate { get; set; }
 
-        public Comment(Person user, string message)
+        public Comment(Guid postId, string userName, string message)
         {
-            User = user;
+            PostId = postId;
+            UserName = userName;
             Message = message;
-            Date = DateTime.Now;
+            CreationDate = DateTime.Now;
         }
     }
 }

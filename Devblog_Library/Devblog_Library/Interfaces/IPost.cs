@@ -15,6 +15,7 @@ namespace Devblog_Library.Interfaces
         public DateTime Date { get; set; }
         public PostType Type { get; init; }
         public TagList Tags { get; set; }
+        public List<Comment> Comments { get; set; }
         public bool IsDeleted { get; set; }
     }
 }

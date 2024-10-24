@@ -22,8 +22,8 @@ namespace Devblog.Pages.Admin
         public IndexModel(IBlogView blogView)
         {
             _blogView = blogView;
-            Posts = new List<IPost>();
-            Tags = new List<Tag>();
+            Posts = new();
+            Tags = new();
         }
 
         public void OnGet(string postType = "All")
