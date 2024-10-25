@@ -28,7 +28,8 @@ Welcome to my **Devblog** project. This is a school project that i have worked o
 - [X] Add User Accounts
 - [X] Add Account Administration
 - [X] Add Admins
-- [ ] Add Comments as a feature
+- [X] Add Comments as a feature
+- [X] Add Hashing and salting for passwords
 - [ ] Add Light/Dark mode
  
 ## 🚧 Known Issues
@@ -45,8 +46,16 @@ Welcome to my **Devblog** project. This is a school project that i have worked o
 - [V2.0.0](https://github.com/Jonasthepanda67/Devblog/releases/tag/V2.0.0)
 [V2.1.0](https://github.com/Jonasthepanda67/Devblog/releases/tag/V2.1.0)
 [V2.2.0](https://github.com/Jonasthepanda67/Devblog/releases/tag/V2.2.0)
+[V2.3.0](https://github.com/Jonasthepanda67/Devblog/releases/tag/V2.3.0)
 
 ## 📜 Changelog
+
+### **V2.3.0**
+- Added Comments and CRUD functions for Comments
+- Changed Login to check password from database instead of appsettings.json
+- Created methods for hashing and salting passwords before being sent to the database when creating a User Account
+- Started using User Type to stop users from accessing pages they are not allowed to access
+- Made some QOL changes and fixes
 
 ### **V2.2.0**
 - Added Admins and changed the way Authors are stored
