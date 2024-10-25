@@ -10,6 +10,8 @@ namespace Devblog.Pages.Admin
     [Authorize]
     public class IndexModel : PageModel
     {
+        #region Properties
+
         private readonly IBlogView _blogView;
 
         public List<IPost> Posts { get; set; }
@@ -19,11 +21,13 @@ namespace Devblog.Pages.Admin
         [BindProperty(SupportsGet = true)]
         public string Type { get; set; }
 
+        #endregion Properties
+
         public IndexModel(IBlogView blogView)
         {
             _blogView = blogView;
-            Posts = new List<IPost>();
-            Tags = new List<Tag>();
+            Posts = new();
+            Tags = new();
         }
 
         public void OnGet(string postType = "All")

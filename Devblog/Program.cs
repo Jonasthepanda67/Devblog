@@ -43,6 +43,7 @@ builder.Services.AddRazorPages().AddRazorPagesOptions(options =>
 }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
 builder.Services.AddSingleton<IRepo<BlogPost>, BlogPostRepo>()
+    .AddSingleton<ICommentRepo, CommentRepo>()
     .AddSingleton<IRepo<Review>, ReviewRepo>()
     .AddSingleton<IRepo<Project>, ProjectRepo>()
     .AddSingleton<IPersonRepo, PersonRepo>()

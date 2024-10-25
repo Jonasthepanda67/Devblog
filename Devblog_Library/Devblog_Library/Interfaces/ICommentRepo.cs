@@ -9,12 +9,14 @@ namespace Devblog_Library.Interfaces
 {
     public interface ICommentRepo
     {
-        public Comment CreateComment(Guid postId, Person user, string message);
+        public Comment CreateComment(Guid postId, string UserName, string message);
+
+        public List<Comment> LoadListOfComments();
 
         public void DeleteComment(Guid commentId);
 
         public Comment GetComment(Guid commentId);
 
-        public string EditComment(Guid commentId, Person user, string message);
+        public void UpdateComment(Comment comment, string NewMessage);
     }
 }

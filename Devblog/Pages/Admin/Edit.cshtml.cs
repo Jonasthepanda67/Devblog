@@ -9,9 +9,11 @@ using System.Security.Claims;
 
 namespace Devblog.Pages.Admin
 {
-    [Authorize]
+    [Authorize(Roles = "Author,Admin")]
     public class EditModel : PageModel
     {
+        #region Properties
+
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IBlogView _blogView;
         private readonly IPersonRepo _personRepo;
@@ -30,6 +32,8 @@ namespace Devblog.Pages.Admin
 
         [BindProperty(SupportsGet = true)]
         public string Type { get; set; }
+
+        #endregion Properties
 
         public EditModel(IHttpContextAccessor httpContextAccessor, IBlogView blogView, ITagRepo tagRepo, IPersonRepo personRepo)
         {

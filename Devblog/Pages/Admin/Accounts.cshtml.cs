@@ -6,11 +6,15 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Devblog.Pages.Admin
 {
-    [Authorize]
+    [Authorize(Roles = "Author")]
     public class AccountsModel : PageModel
     {
+        #region Properties
+
         private readonly IPersonRepo _personRepo;
         public List<Person> Accounts { get; set; }
+
+        #endregion Properties
 
         public AccountsModel(IPersonRepo personRepo)
         {
