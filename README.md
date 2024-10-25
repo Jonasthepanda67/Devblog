@@ -31,6 +31,7 @@ Welcome to my **Devblog** project. This is a school project that i have worked o
 - [X] Add Comments as a feature
 - [X] Add Hashing and salting for passwords
 - [ ] Add Light/Dark mode
+- [ ] Implement the use of Images
  
 ## 🚧 Known Issues
 *No know issues have appeared so far!*
