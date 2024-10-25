@@ -11,7 +11,6 @@
         @foreach (Project project in Model.Projects)
         {
             <div class="project-card">
-                <img src="@project.Image" alt="@project.Title Image" class="project-image" />
                 <div class="project-info">
                     <h3>@project.Title</h3>
                     @{
@@ -19,6 +18,9 @@
                         var capitalizedDate = char.ToUpper(formattedDate[0]) + formattedDate.Substring(1);
                     }
                     <p class="project-date">Published on: @capitalizedDate</p>
+
+                    <!-- Project Image -->
+                    <img src="@project.Image" alt="@project.Title Image" class="project-image" />
                     
                     <!-- Description -->
                     <div class="project-description">
@@ -31,7 +33,7 @@
                         <strong>Tags:</strong>
                         @foreach (Tag tag in project.Tags)
                         {
-                            <button type="button" class="btn" disabled>@tag.Name</button>
+                            <button type="button" class="btn tag" disabled>@tag.Name</button>
                         }
                     </div>
 
@@ -47,50 +49,47 @@
     .portfolio-container {
         width: 90%;
         margin: 0 auto;
-        padding: 40px 0;
+        padding: 30px 0;
     }
 
     .portfolio-title {
         text-align: center;
-        color: #4A4A4A;
+        color: #333;
         margin-bottom: 40px;
         font-size: 2.5em;
     }
 
     .project-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-template-columns: repeat(2, 1fr);
         gap: 20px;
     }
 
     .project-card {
-        background-color: #fff;
+        background-color: #f9f9f9;
         border-radius: 10px;
         overflow: hidden;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         transition: transform 0.3s, box-shadow 0.3s;
     }
 
-        .project-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-    .project-image {
-        width: 100%;
-        height: 200px;
-        object-fit: cover;
-        border-bottom: 1px solid #ddd;
+    .project-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     }
 
     .project-info {
         padding: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
 
-        .project-info h3 {
-            margin: 0;
-            color: #333;
-        }
+    .project-info h3 {
+        margin: 0;
+        color: #333;
+        font-size: 1.5em;
+    }
 
     .project-date {
         font-size: 0.9em;
@@ -98,33 +97,47 @@
         margin: 10px 0;
     }
 
+    .project-image {
+        width: 100%;
+        height: 250px; /* Adjusted for consistent sizing */
+        object-fit: cover;
+        margin: 10px 0; /* Adds spacing between elements */
+        border-radius: 5px;
+    }
+
     .project-description {
         margin-bottom: 10px;
+        color: #616161;
     }
-        .project-description p {
-            margin: 0;
-            color: #616161;
-        }
+
+    .project-description h6 {
+        color: #007bff;
+        margin-bottom: 5px;
+    }
 
     .project-tags {
         margin-bottom: 15px;
     }
 
     .tag {
-        background-color: #f0f0f0;
+        background-color: #e7f3ff;
+        color: #0056b3;
         padding: 5px 10px;
         border-radius: 5px;
         margin-right: 5px;
         font-size: 0.85em;
+        border: none;
     }
 
     .project-link {
         text-decoration: none;
         color: #007bff;
         font-weight: bold;
+        display: inline-block;
+        margin-top: 10px;
     }
 
-        .project-link:hover {
-            text-decoration: underline;
-        }
+    .project-link:hover {
+        text-decoration: underline;
+    }
 </style>

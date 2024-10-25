@@ -12,6 +12,7 @@ namespace Devblog.Pages.Admin
     {
         #region Properties
 
+        private IWebHostEnvironment _environment;
         private readonly IBlogView _blogView;
 
         public List<IPost> Posts { get; set; }
@@ -23,11 +24,12 @@ namespace Devblog.Pages.Admin
 
         #endregion Properties
 
-        public IndexModel(IBlogView blogView)
+        public IndexModel(IBlogView blogView, IWebHostEnvironment environment)
         {
             _blogView = blogView;
             Posts = new();
             Tags = new();
+            _environment = environment;
         }
 
         public void OnGet(string postType = "All")
@@ -65,6 +67,15 @@ namespace Devblog.Pages.Admin
         {
             // Find the post and remove it from the list
             IPost post = _blogView.GetPostById(id);
+            if (post.Type == PostType.Project)
+            {
+                Project project = (Project)post;
+                string file = _environment.WebRootPath + project.Image;
+                if (System.IO.File.Exists(file))
+                {
+                    System.IO.File.Delete(file);
+                }
+            }
             if (post != null)
             {
                 _blogView.DeletePost(id);

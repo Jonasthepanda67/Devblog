@@ -14,11 +14,13 @@ namespace Devblog.Pages.Admin
     {
         #region Properties
 
+        private IWebHostEnvironment _environment;
         private readonly IBlogView _blogView;
         private readonly ITagRepo _tagRepo;
 
-        public CreateModel(IBlogView blogView, ITagRepo tagRepo)
+        public CreateModel(IWebHostEnvironment environment, IBlogView blogView, ITagRepo tagRepo)
         {
+            _environment = environment;
             _blogView = blogView;
             _tagRepo = tagRepo;
         }
@@ -54,9 +56,6 @@ namespace Devblog.Pages.Admin
         public short? Stars { get; set; }
 
         [BindProperty]
-        public string Image { get; set; }
-
-        [BindProperty]
         [Required(ErrorMessage = "Please select a post type.")]
         public PostType? PostTypes { get; set; }
 
@@ -73,7 +72,7 @@ namespace Devblog.Pages.Admin
             Tags = _blogView.LoadListOfTags();
         }
 
-        public IActionResult OnPostCreatePost()
+        public IActionResult OnPostCreatePost(string filePathForDb)
         {
             ModelState.Remove(nameof(TagName));
             if (PostTypes == null && SliderIsChecked)
@@ -82,23 +81,18 @@ namespace Devblog.Pages.Admin
                 return Page();
             }
 
-            // Handle the different post types
             if (PostTypes == PostType.BlogPost)
             {
                 ModelState.Remove(nameof(Pros));
                 ModelState.Remove(nameof(Cons));
                 ModelState.Remove(nameof(Stars));
-                ModelState.Remove(nameof(Image));
                 ModelState.Remove(nameof(Description));
             }
             else if (PostTypes == PostType.Review)
             {
-                // Remove fields that are not needed for Review
                 ModelState.Remove(nameof(Description));
-                ModelState.Remove(nameof(Image));
                 ModelState.Remove(nameof(Weblog));
 
-                // Ensure these fields are present for Review
                 if (string.IsNullOrWhiteSpace(Pros))
                 {
                     ModelState.AddModelError("Pros", "Pros are required for Review.");
@@ -114,21 +108,14 @@ namespace Devblog.Pages.Admin
             }
             else if (PostTypes == PostType.Project)
             {
-                // Remove validation for fields that are not required for Project
                 ModelState.Remove(nameof(Pros));
                 ModelState.Remove(nameof(Cons));
                 ModelState.Remove(nameof(Stars));
                 ModelState.Remove(nameof(Weblog));
 
-                // Ensure Description and Image are provided for Project
                 if (string.IsNullOrWhiteSpace(Description))
                 {
                     ModelState.AddModelError("Description", "Description is required for Project.");
-                }
-
-                if (string.IsNullOrWhiteSpace(Image))
-                {
-                    ModelState.AddModelError("Image", "Image is required for Project.");
                 }
             }
 
@@ -157,7 +144,7 @@ namespace Devblog.Pages.Admin
             }
             else if (PostTypes == PostType.Project)
             {
-                NewPost = _blogView.AddPost(Title, Reference, Description, Image);
+                NewPost = _blogView.AddPost(Title, Reference, Description, filePathForDb);
             }
 
             if (!string.IsNullOrEmpty(Request.Form["SelectedTagIds"]))
@@ -188,7 +175,6 @@ namespace Devblog.Pages.Admin
             ModelState.Remove(nameof(Pros));
             ModelState.Remove(nameof(Cons));
             ModelState.Remove(nameof(Stars));
-            ModelState.Remove(nameof(Image));
             ModelState.Remove(nameof(Weblog));
             ModelState.Remove(nameof(PostTypes));
 
@@ -206,6 +192,33 @@ namespace Devblog.Pages.Admin
             _tagRepo.CreateTag(TagName);
 
             return RedirectToPage("/Admin/Index", new { type = "Tag" });
+        }
+
+        public async Task<IActionResult> OnPostUploadProjectFileAsync(IFormFile projectFile)
+        {
+            if (projectFile == null || projectFile.Length == 0)
+            {
+                ModelState.AddModelError(string.Empty, "Please select a valid file.");
+                return Page();
+            }
+
+            var uploadsFolder = Path.Combine(_environment.WebRootPath, "Uploads");
+            Directory.CreateDirectory(uploadsFolder);
+
+            var fileName = Path.GetFileName(projectFile.FileName);
+            var filePath = Path.Combine(uploadsFolder, fileName);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await projectFile.CopyToAsync(fileStream);
+            }
+
+            var fileExtension = Path.GetExtension(fileName);
+            var filePathForDb = $@"\Uploads\{fileName}";
+
+            OnPostCreatePost(filePathForDb);
+
+            return RedirectToPage("/Admin/Index");
         }
     }
 }

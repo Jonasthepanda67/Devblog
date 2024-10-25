@@ -14,6 +14,7 @@ namespace Devblog.Pages.Admin
     {
         #region Properties
 
+        private IWebHostEnvironment _environment;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IBlogView _blogView;
         private readonly IPersonRepo _personRepo;
@@ -33,15 +34,19 @@ namespace Devblog.Pages.Admin
         [BindProperty(SupportsGet = true)]
         public string Type { get; set; }
 
+        [BindProperty]
+        public IFormFile ProjectFile { get; set; }
+
         #endregion Properties
 
-        public EditModel(IHttpContextAccessor httpContextAccessor, IBlogView blogView, ITagRepo tagRepo, IPersonRepo personRepo)
+        public EditModel(IHttpContextAccessor httpContextAccessor, IBlogView blogView, ITagRepo tagRepo, IPersonRepo personRepo, IWebHostEnvironment environment)
         {
             _httpContextAccessor = httpContextAccessor;
             _blogView = blogView;
             Posts = new List<IPost>();
             _tagRepo = tagRepo;
             _personRepo = personRepo;
+            _environment = environment;
 
             UserType = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role)?.Value;
         }
@@ -81,7 +86,7 @@ namespace Devblog.Pages.Admin
             return Page();
         }
 
-        public IActionResult OnPostEditPost()
+        public async Task<IActionResult> OnPostEditPostAsync()
         {
             Guid postId = Guid.Parse(Request.Form["PostId"]);
             string PostTypes = Request.Form["PostType"];
@@ -113,11 +118,33 @@ namespace Devblog.Pages.Admin
             else if (PostTypes == "Project")
             {
                 string Description = Request.Form["Description"];
-                string Image = Request.Form["Image"];
-                Project project = _blogView.GetPostById(postId) as Project;
-                if (project != null)
+
+                if (ProjectFile != null || ProjectFile.Length != 0)
                 {
-                    _blogView.UpdatePost(project, Title, Reference, Description, Image);
+                    var uploadsFolder = Path.Combine(_environment.WebRootPath, "Uploads");
+                    Directory.CreateDirectory(uploadsFolder);
+
+                    var fileName = Path.GetFileName(ProjectFile.FileName);
+                    var filePath = Path.Combine(uploadsFolder, fileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await ProjectFile.CopyToAsync(fileStream);
+                    }
+
+                    var fileExtension = Path.GetExtension(fileName);
+                    var filePathForDb = $"/Uploads/{fileName}";
+
+                    Project project = _blogView.GetPostById(postId) as Project;
+                    if (project != null)
+                    {
+                        _blogView.UpdatePost(project, Title, Reference, Description, filePathForDb);
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Please select a valid file.");
+                    return Page();
                 }
             }
 

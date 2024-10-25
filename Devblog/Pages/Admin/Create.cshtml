@@ -20,7 +20,7 @@
     
     <div id="content-left" class="content @(isTag ? "hidden" : "")">
         <div class="col mt-1">
-            <form method="post" asp-page-handler="CreatePost">
+            <form method="post" enctype="multipart/form-data" asp-page-handler="UploadProjectFile">
                 <div id="TitleDiv" class="row justify-content-center mb-4">
                     <label>Title: </label>
                     <input name="Title" required />
@@ -83,8 +83,7 @@
                     <span class="alert-danger" asp-validation-for="Description"></span>
 
                     <label>Image: </label>
-                    <input name="Image" required />
-                    <span class="alert-danger" asp-validation-for="Image"></span>
+                    <input type="file" name="projectFile" />
                 </div>
 
                 <!-- Hidden input to store selected tags -->

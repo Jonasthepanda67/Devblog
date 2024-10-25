@@ -14,7 +14,7 @@
         <div class="container mt-4 d-flex justify-content-center align-items-center">
             <div class="col-md-6">
                 <p class="text-center">Date Created: @Model.Post.Date.ToShortDateString()</p>
-                <form method="post" asp-page-handler="EditPost">
+                <form method="post" asp-page-handler="EditPost" enctype="multipart/form-data">
                     <input type="hidden" name="PostId" value="@Model.Post.Id" />
                     <input type="hidden" name="PostType" value="@Model.Post.GetType().Name" />
 
@@ -58,7 +58,8 @@
                             <label>Description: </label>
                             <input class="form-control" name="Description" value="@project.Description" />
                         </div>
-                        <div class="text-center">
+                        <div class="form-group mb-3">
+                            <input type="file" name="projectFile" />
                             <img src="@project.Image" alt="Project image" class="img-fluid" />
                         </div>
                     }
