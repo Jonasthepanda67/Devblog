@@ -16,7 +16,7 @@ GO
 USE Devblog
 CREATE TABLE PersonTable 
 (
-Person_Id UniqueIdentifier NOT NULL,
+Person_Id UniqueIdentifier NOT NULL PRIMARY KEY,
 Fname nvarchar(80) NOT NULL,
 Lname nvarchar(100) NOT NULL,
 FullName nvarchar(181) NOT NULL,
@@ -84,34 +84,45 @@ Post_Id UniqueIdentifier NOT NULL,
 )
 GO
 
+CREATE TABLE CommentsTable
+(
+Comment_Id UNIQUEIDENTIFIER NOT NULL PRIMARY KEY,
+Post_Id UNIQUEIDENTIFIER NOT NULL,
+UserName nvarchar(18) NOT NULL,
+Message nvarchar(500) NOT NULL,
+CreationDate DATETIME NOT NULL DEFAULT CAST( GETDATE() AS Date),
+FOREIGN KEY (Post_Id) REFERENCES PostTable(Post_Id),
+FOREIGN KEY (UserName) REFERENCES PersonTable(UserName)
+)
+
 --------------------------------------------------------
 
 INSERT INTO PersonTable
 (Person_Id, Fname,Lname, FullName, UserName, Age, Mail, City, Number, Password, UserType)
 VALUES
 
-('37c13ea0-02f1-4bae-b598-620e0642e666', 'Jonas', 'Petersen', 'Jonas Petersen', 'Jonasthepanda', '19', 'jonasfpetersen1@gmail.com', 'Nordborg', '+4542766861', 'AQAAAAIAAYagAAAAEFfKkNmSMSMTXfgjpUmVwhSpLSYHNHlSRZACrHEaIjuKwPPwRIxecxiuKCB6+8u9YA==', 'Author')
+('37c13ea0-02f1-4bae-b598-620e0642e666', 'Jonas', 'Petersen', 'Jonas Petersen', 'Jonasthepanda', '19', 'jonasfpetersen1@gmail.com', 'Nordborg', '42766861', '7A28C3624CABCCE68EF5B0286133E61B4933DAA52E7FCE14F7CF68B6FD6F124F:6D2DCBA5567E3D087FC5F347B0637E9E:50000:SHA256', 'Author')
 GO
 
 INSERT INTO PostTable
 (Post_Id, Title, Reference, Date, PostType)
 VALUES
 
-('E74750C1-5965-4816-82A2-1F30D70DE95F', 'Devblog Update', 'devblogupdates.dk', '2024-10-10 00:00:00.000', 'BlogPost')
+('E74750C1-5965-4816-82A2-1F30D70DE95F', 'Devblog Update', 'devblogupdates.dk', '2024-10-10', 'BlogPost')
 GO
 
 INSERT INTO PostTable
 (Post_Id, Title, Reference, Date, PostType)
 VALUES
 
-('51DE10F1-53A8-4984-AED0-A221AD5F8312', 'Javascript', 'javasacrifice.com', '2024-10-10 00:00:00.000', 'Review')
+('51DE10F1-53A8-4984-AED0-A221AD5F8312', 'Javascript', 'javasacrifice.com', '2024-10-10', 'Review')
 GO
 
 INSERT INTO PostTable
 (Post_Id, Title, Reference, Date, PostType)
 VALUES
 
-('F6873D1F-9A88-46BB-9552-C878FCE4DC30', 'Biblioteket', 'bibliotekproject.dk', '2024-10-10 00:00:00.000', 'Project')
+('F6873D1F-9A88-46BB-9552-C878FCE4DC30', 'Biblioteket', 'bibliotekproject.dk', '2024-10-10', 'Project')
 GO
 
 INSERT INTO BlogPostTable
@@ -369,6 +380,33 @@ BEGIN
 	UPDATE PersonTable
     SET Fname = @FName, Lname = @Lname, FullName = @FullName, Age = @Age, Mail = @Mail, City = @City, Number = @Number, Password = @Password, UserType = @UserType
     WHERE Person_Id = @Person_Id
+END
+GO
+
+CREATE PROCEDURE sp_CreateComment
+@Comment_Id nvarchar(50),
+@Post_Id nvarchar(50),
+@UserName nvarchar(18),
+@Message nvarchar(500),
+@CreationDate DATETIME
+AS
+INSERT INTO CommentsTable(Comment_Id, Post_Id, UserName, Message, CreationDate) VALUES (@Comment_Id, @Post_Id, @UserName, @Message, @CreationDate)
+GO
+
+CREATE PROCEDURE sp_DeleteComment
+@Comment_Id nvarchar(50)
+AS
+DELETE FROM CommentsTable WHERE Comment_Id = @Comment_Id
+GO
+
+CREATE PROCEDURE sp_UpdateComment
+@Comment_Id nvarchar(50),
+@Message nvarchar(500)
+AS
+BEGIN
+UPDATE CommentsTable
+SET Message = @Message
+WHERE Comment_Id = @Comment_Id
 END
 GO
 
