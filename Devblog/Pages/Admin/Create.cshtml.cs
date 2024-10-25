@@ -9,9 +9,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Devblog.Pages.Admin
 {
-    [Authorize]
+    [Authorize(Roles = "Author")]
     public class CreateModel : PageModel
     {
+        #region Properties
+
         private readonly IBlogView _blogView;
         private readonly ITagRepo _tagRepo;
 
@@ -63,6 +65,8 @@ namespace Devblog.Pages.Admin
         public string TagName { get; set; }
 
         public bool SliderIsChecked { get; set; } = false;
+
+        #endregion Properties
 
         public void OnGet()
         {

@@ -8,6 +8,8 @@ namespace Devblog.Pages
 {
     public class IndexModel : PageModel
     {
+        #region Properties
+
         private readonly IBlogView _blogView;
         private readonly ICommentRepo _commentRepo;
 
@@ -20,12 +22,12 @@ namespace Devblog.Pages
         [BindProperty]
         public string Message { get; set; }
 
-        public Post currentPost { get; set; }
-
         [BindProperty]
         public string UserName { get; set; }
 
         public List<IPost> Posts { get; set; } = new List<IPost>();
+
+        #endregion Properties
 
         public void OnGet()
         {
@@ -55,12 +57,10 @@ namespace Devblog.Pages
             return RedirectToPage();
         }
 
-        public void ShowModal()
+        public IActionResult OnPostEditComment(Guid postId, Guid commentId)
         {
-        }
+            ModelState.Remove(nameof(UserName));
 
-        public IActionResult OnPostEditComment(Guid postId)
-        {
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -73,11 +73,37 @@ namespace Devblog.Pages
             }
 
             IPost post = _blogView.GetPostById(postId);
-            /*Comment comment = _commentRepo.GetComment(commentId);
+            if (post == null)
+            {
+                ModelState.AddModelError(string.Empty, "The post was not found.");
+                return Page();
+            }
 
-            post.Comments.Find(c => c.Id == comment.Id).Message = Message;
+            Comment comment = post.Comments.Find(c => c.Id == commentId);
+            if (comment == null)
+            {
+                ModelState.AddModelError(string.Empty, "The comment was not found.");
+                return Page();
+            }
 
-            _commentRepo.UpdateComment(comment, Message);*/
+            comment.Message = Message;
+
+            _commentRepo.UpdateComment(comment, Message);
+
+            return RedirectToPage();
+        }
+
+        public IActionResult OnPostDeleteComment(Guid commentId)
+        {
+            ModelState.Remove(nameof(UserName));
+            ModelState.Remove(nameof(Message));
+
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            _commentRepo.DeleteComment(commentId);
 
             return RedirectToPage();
         }

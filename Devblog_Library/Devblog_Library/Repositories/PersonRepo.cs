@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
@@ -15,8 +16,18 @@ namespace Devblog_Library.Repositories
 {
     public class PersonRepo : IPersonRepo
     {
+        #region Properties
+
         private readonly SqlConnection con;
         public List<Person> UserAccounts { get; } = [];
+
+        private const int _saltSize = 16;
+        private const int _keySize = 32;
+        private const int _iterations = 50000;
+        private static readonly HashAlgorithmName _algorithm = HashAlgorithmName.SHA256;
+        private const char segmentDelimiter = ':';
+
+        #endregion Properties
 
         public PersonRepo(IConfiguration configuration)
         {
@@ -63,12 +74,6 @@ namespace Devblog_Library.Repositories
         {
             List<Person> userAccounts = LoadListOfPeople();
             return userAccounts.Find(p => p.Id == id);
-        }
-
-        public Person GetPersonByUserName(string userName)
-        {
-            List<Person> userAccounts = LoadListOfPeople();
-            return userAccounts.Find(p => p.UserName == userName);
         }
 
         public List<Person> LoadListOfPeople()
@@ -205,6 +210,42 @@ namespace Devblog_Library.Repositories
                     con.Close();
                 }
             }
+        }
+
+        public string HashPassword(string input)
+        {
+            byte[] salt = RandomNumberGenerator.GetBytes(_saltSize);
+            byte[] hash = Rfc2898DeriveBytes.Pbkdf2(
+                input,
+                salt,
+                _iterations,
+                _algorithm,
+                _keySize
+            );
+            return string.Join(
+                segmentDelimiter,
+                Convert.ToHexString(hash),
+                Convert.ToHexString(salt),
+                _iterations,
+                _algorithm
+            );
+        }
+
+        public bool VerifyPassword(string input, string hashString)
+        {
+            string[] segments = hashString.Split(segmentDelimiter);
+            byte[] hash = Convert.FromHexString(segments[0]);
+            byte[] salt = Convert.FromHexString(segments[1]);
+            int iterations = int.Parse(segments[2]);
+            HashAlgorithmName algorithm = new HashAlgorithmName(segments[3]);
+            byte[] inputHash = Rfc2898DeriveBytes.Pbkdf2(
+                input,
+                salt,
+                iterations,
+                algorithm,
+                hash.Length
+            );
+            return CryptographicOperations.FixedTimeEquals(inputHash, hash);
         }
     }
 }

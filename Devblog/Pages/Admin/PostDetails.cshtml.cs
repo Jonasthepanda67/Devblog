@@ -9,6 +9,8 @@ namespace Devblog.Pages.Admin
     [Authorize]
     public class PostDetailsModel : PageModel
     {
+        #region Properties
+
         private readonly IBlogView _blogView;
         public List<IPost> Posts { get; set; }
         public IPost Post { get; set; }
@@ -18,6 +20,8 @@ namespace Devblog.Pages.Admin
             _blogView = blogView;
             Posts = new List<IPost>();
         }
+
+        #endregion Properties
 
         public IActionResult OnGet(Guid id)
         {

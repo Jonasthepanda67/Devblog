@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Devblog.Pages.Admin
 {
-    [Authorize]
+    [Authorize(Roles = "Author")]
     public class DeleteModel : PageModel
     {
+        #region Properties
+
         private readonly IBlogView _blogView;
         private readonly ITagRepo _tagRepo;
         private readonly IPersonRepo _personRepo;
@@ -21,6 +23,8 @@ namespace Devblog.Pages.Admin
 
         public Tag Tag { get; set; }
         public Person Account { get; set; }
+
+        #endregion Properties
 
         public DeleteModel(IBlogView blogView, ITagRepo tagRepo, IPersonRepo personRepo)
         {
@@ -55,12 +59,14 @@ namespace Devblog.Pages.Admin
 
         public IActionResult OnPost()
         {
-            if (Type == "Tag" & Tag != null)
+            if (Type == "Tag")
             {
+                Tag = _blogView.GetTagById(Id);
                 _tagRepo.DeleteTag(Tag);
             }
-            else if (Type == "Account" & Account != null)
+            else if (Type == "Account")
             {
+                Account = _personRepo.GetPersonById(Id);
                 _personRepo.DeletePerson(Account);
                 return RedirectToPage("/Admin/Accounts");
             }

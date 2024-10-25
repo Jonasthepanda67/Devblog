@@ -15,12 +15,14 @@ namespace Devblog_Library.Interfaces
 
         public Person GetPersonById(Guid id);
 
-        public Person GetPersonByUserName(string userName);
-
         public List<Person> LoadListOfPeople();
 
         public void DeletePerson(Person person);
 
         public void UpdatePerson(Person person, string NewFirstName, string NewLastName, string NewFullName, int NewAge, string NewMail, string NewCity, string NewPhoneNumber, string NewPassword, string NewUserType);
+
+        public string HashPassword(string input);
+
+        public bool VerifyPassword(string input, string hashString);
     }
 }

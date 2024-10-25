@@ -9,11 +9,15 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using Microsoft.Data.SqlClient;
 using System.Runtime.Versioning;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Devblog.Pages
 {
     public class LoginModel : PageModel
     {
+        #region Properties
+
         private readonly SqlConnection con;
         private readonly IConfiguration configuration;
         private readonly IPersonRepo _personRepo;
@@ -68,6 +72,8 @@ namespace Devblog.Pages
 
         public string Message { get; set; }
 
+        #endregion Properties
+
         public async Task<IActionResult> OnPost()
         {
             string query = "SELECT UserName, Password, UserType FROM PersonTable WHERE UserName = @username";
@@ -85,8 +91,7 @@ namespace Devblog.Pages
                     string hashedPassword = reader["Password"].ToString();
                     string userType = reader["UserType"].ToString();
 
-                    var passwordHasher = new PasswordHasher<string>();
-                    if (passwordHasher.VerifyHashedPassword(null, hashedPassword, Password) == PasswordVerificationResult.Success)
+                    if (_personRepo.VerifyPassword(Password, hashedPassword))
                     {
                         // Create claims
                         var claims = new List<Claim>
@@ -100,8 +105,16 @@ namespace Devblog.Pages
                         // Sign in the user
                         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
-                        // Redirect to the specified or default page
-                        var returnUrl = Request.Query["ReturnUrl"].FirstOrDefault() ?? "/admin/index";
+                        var returnUrl = "";
+
+                        if (userType == "User")
+                        {
+                            // Redirect to the specified or default page
+                            returnUrl = Request.Query["ReturnUrl"].FirstOrDefault() ?? "/index";
+                            return Redirect(returnUrl);
+                        }
+
+                        returnUrl = Request.Query["ReturnUrl"].FirstOrDefault() ?? "/admin/index";
                         return Redirect(returnUrl);
                     }
                 }
@@ -128,7 +141,9 @@ namespace Devblog.Pages
                 return Page();
             }
 
-            _personRepo.CreatePerson(FirstName, LastName, ChosenUserName, Age, Mail, City, PhoneNumber, ChosenPassword);
+            string hashedPassword = _personRepo.HashPassword(ChosenPassword);
+
+            _personRepo.CreatePerson(FirstName, LastName, ChosenUserName, Age, Mail, City, PhoneNumber, hashedPassword);
 
             return RedirectToPage("/Login");
         }
