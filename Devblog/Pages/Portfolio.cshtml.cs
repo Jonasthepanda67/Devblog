@@ -18,10 +18,10 @@ namespace Devblog.Pages
 
         public void OnGet()
         {
-            // Fetch all project posts
             Projects = _blogView.LoadListOfPosts()
                                 .Where(post => post.Type == PostType.Project)
                                 .Cast<Project>()
+                                .OrderByDescending(project => project.Date)
                                 .ToList();
         }
     }
