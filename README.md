@@ -32,7 +32,7 @@ Welcome to my **Devblog** project. This is a school project that i have worked o
 - [X] Add Hashing and salting for passwords
 - [ ] Add Light/Dark mode
 - [ ] Implement the use of Images
-- [ ] Add Bootstrap Toast for notifying user off different events
+- [ ] Add Bootstrap Toast for notifying user about different events
  
 ## 🚧 Known Issues
 *No know issues have appeared so far!*
