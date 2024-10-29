@@ -7,8 +7,8 @@
 }
 
 <body>
-    <div class="container">
-        <h1 class="text-center mb-5" style="color: #052eb3;">Developer Blog</h1>
+    <div>
+        <h1 class="text-center mb-5" style="color: #620dc5; font-weight: bold;">Developer Blog</h1>
 
         <div class="row">
             @foreach (var post in Model.Posts)
@@ -38,7 +38,7 @@
                         <div class="post-content">
                             @if (post is BlogPost blogPost)
                             {
-                                <!-- BlgoPost Section -->
+                                <!-- BlogPost Section -->
                                 <div class="weblog">
                                     <p>@blogPost.Weblog</p>
                                 </div>
@@ -190,10 +190,10 @@
 </script>
 
 <style>
-    /* Card Design */
     .post-card {
-        background-color: #f9f9f9;
-        border: 1px solid #ddd;
+        background-color: var(--bs-body-bg);
+        border: 1px solid var(--bs-border-color);
+        color: var(--bs-body-color);
         border-radius: 10px;
         padding: 20px;
         margin-bottom: 20px;
@@ -201,30 +201,36 @@
         transition: all 0.3s ease;
     }
 
-        /* Hover effect */
         .post-card:hover {
-            background-color: #ffffff;
+            background-color: var(--bs-body-bg);
             transform: translateY(-5px);
             box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
         }
 
-    /* Title and date styling */
     .post-title {
         font-size: 1.8rem;
         font-weight: bold;
-        color: #333;
+        color: var(--bs-primary-text-emphasis);
     }
 
-    .post-date {
+    [data-bs-theme="light"] .post-date {
         font-size: 0.9rem;
         color: #777;
     }
 
-    .post-tags {
+    [data-bs-theme="dark"] .post-date {
+        font-size: 0.9rem;
+        color: #aaaaaa;
+    }
+
+    [data-bs-theme="light"] .post-tags {
         color: black;
     }
 
-    /* Post Reference link */
+    [data-bs-theme="dark"] .post-tags {
+        color: white;
+    }
+
     .post-reference {
         font-size: 1.1rem;
         color: #007bff;
@@ -236,25 +242,33 @@
             text-decoration: underline;
         }
 
-    /* Post content styling */
     .post-content {
         margin-top: 10px;
         font-size: 1.1rem;
     }
 
-    /* Weblog styling */
-    .weblog {
+    [data-bs-theme="light"] .weblog {
         background-color: #e8f0fe;
         border-left: 5px solid #2196f3;
         padding: 15px;
         font-style: italic;
         font-size: 1.1rem;
-        color: #444;
+        /*color: #444;*/
         margin-top: 15px;
         border-radius: 8px;
     }
 
-    /* Pros and Cons blocks */
+    [data-bs-theme="dark"] .weblog {
+        background-color: #324b71;
+        border-left: 5px solid #1c53c9;
+        padding: 15px;
+        font-style: italic;
+        font-size: 1.1rem;
+        /*color: #444;*/
+        margin-top: 15px;
+        border-radius: 8px;
+    }
+
     .pros, .cons {
         padding: 10px;
         border-radius: 5px;
@@ -262,25 +276,35 @@
         margin-bottom: 10px;
     }
 
-    .pros {
+    [data-bs-theme="light"] .pros {
         background-color: #e0f7e0;
         border-left: 5px solid #28a745;
     }
 
-    .cons {
+    [data-bs-theme="dark"] .pros {
+        background-color: #303f30;
+        border-left: 5px solid #28a745;
+        color: white;
+    }
+
+    [data-bs-theme="light"] .cons {
         background-color: #f8d7da;
         border-left: 5px solid #dc3545;
     }
 
-    /* Star rating */
+    [data-bs-theme="dark"] .cons {
+        background-color: #483335;
+        border-left: 5px solid #dc3545;
+        color: white;
+    }
+
     .star-rating i {
         margin-right: 2px;
         color: #ffc107;
     }
 
-    /* Add some vibrant colors */
     body {
-        background-color: #f0f4f8;
+        background-color: var(--bs-body-bg);
     }
 
     .container {
@@ -288,10 +312,9 @@
     }
 
     .post-title, .pros strong, .cons strong {
-        color: #ff5722; /* Vibrant orange for titles */
+        color: #ff5722;
     }
 
-    /* Comment Section Styling */
     .comment-section {
         margin-top: 30px;
         border-top: 1px solid #ddd;
@@ -300,54 +323,66 @@
 
     .comment-title {
         font-size: 1.5rem;
-        color: #052eb3; /* Match the blog title color */
+        color: #a08615;
         margin-bottom: 15px;
         font-weight: bold;
     }
 
     .comment {
-        background-color: #f1f3f5; /* Light grey to distinguish from the post */
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        padding: 15px;
-        margin-bottom: 15px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        transition: background-color 0.3s;
+        background-color: var(--bs-secondary-bg);
+        color: var(--bs-body-color);
+        border: 1px solid var(--bs-border-color);
     }
-    
-    .comment:hover {
-        background-color: #e9ecef; /* Slightly darker on hover */
+
+    [data-bs-theme="light"] .comment:hover {
+        background-color: lightgray;
+    }
+
+    [data-bs-theme="dark"] .comment:hover {
+        background-color: #40464C;
     }
 
     .comment-header {
     display: flex;
-    align-items: center; /* Align vertically */
-    gap: 2px; /* Adjust the space between each item */
+    align-items: center;
+    gap: 2px;
 }
 
-    .comment-author {
+    [data-bs-theme="light"] .comment-author {
         font-weight: bold;
-        color: #ff5722; /* Same vibrant orange as the post title */
-        margin-right: auto; /* Push the author name to the left */
+        color: #d8122d;
+        margin-right: auto;
+    }
+
+    [data-bs-theme="dark"] .comment-author {
+        font-weight: bold;
+        color: #d8122d;
+        margin-right: auto;
     }
 
     .comment-date {
         font-size: 0.85rem;
         color: #777;
-        margin-left: 5px; /* Add slight margin to separate from the author */
+        margin-left: 5px;
     }
 
     .edit-icon, .delete-icon {
         background: none;
         border: none;
         outline: none;
-        margin-left: 2px; /* Add space between the edit and delete icons */
-        cursor: pointer; /* Show a pointer cursor to indicate they are clickable */
+        margin-left: 2px;
+        cursor: pointer;
     }
 
-    .comment-content {
+    [data-bs-theme="light"] .comment-content {
         font-size: 1rem;
         color: #333;
+        line-height: 1.5;
+    }
+
+    [data-bs-theme="dark"] .comment-content {
+        font-size: 1rem;
+        color: white;
         line-height: 1.5;
     }
 

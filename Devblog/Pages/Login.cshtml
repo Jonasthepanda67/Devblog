@@ -91,7 +91,7 @@
 
 <style>
     body {
-        background: #f8f9fa;
+        background: var(--bs-body-bg);
         font-family: 'Arial', sans-serif;
     }
 
@@ -101,8 +101,19 @@
         color: #ff0000;
     }
 
-    .login-container {
-        background: #ffffff;
+    [data-bs-theme="light"]  .login-container {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        max-width: 400px;
+        width: 100%;
+        margin-top: 200px;
+        margin-bottom: 300px;
+    }
+
+    [data-bs-theme="dark"]  .login-container {
+        background: #40464C;
         border-radius: 8px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         padding: 20px;
@@ -110,15 +121,26 @@
         width: 100%;
     }
 
-    .login-form {
-        background: #ffffff;
+    [data-bs-theme="light"]  .login-form {
+        background: white;
         border-radius: 8px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-    .login-form h2 {
+    [data-bs-theme="dark"]  .login-form {
+        background: #40464C;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    [data-bs-theme="light"] .login-form h2 {
         font-weight: bold;
         color: #333;
+    }
+
+    [data-bs-theme="dark"] .login-form h2 {
+        font-weight: bold;
+        color: white;
     }
 
     .form-label {
@@ -157,18 +179,34 @@
         border-radius: 8px;
     }
 
-    .modal-header {
+    [data-bs-theme="light"] .modal-header {
         background-color: #f1f1f1;
         border-bottom: none;
         padding: 15px 20px;
     }
 
-    .modal-title {
+    [data-bs-theme="dark"] .modal-header {
+        background-color: #555555;
+        border-bottom: none;
+        padding: 15px 20px;
+    }
+
+    [data-bs-theme="light"] .modal-title {
         color: #333;
     }
 
-    .modal-body {
+    [data-bs-theme="dark"] .modal-title {
+        color: white;
+    }
+
+    [data-bs-theme="light"] .modal-body {
         padding: 20px;
+        background: white;
+    }
+
+    [data-bs-theme="dark"] .modal-body {
+        padding: 20px;
+        background: #40464C;
     }
 
     .modal-footer {

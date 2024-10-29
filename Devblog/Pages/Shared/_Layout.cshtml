@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="light">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="~/_Layout.cshtml.css">
 </head>
 <body>
-    <header>
+    <header id="main-header">
         <nav class="navbar sticky-top bg-body-tertiary">
             <div class="container-fluid justify-content-center">
                 <a class="nav-link" asp-area="" asp-page="/Index">Home</a>
@@ -28,17 +28,18 @@
                 {
                     <a class="nav-link" asp-area="" asp-page="/Login">Login</a>
                 }
+                <button id="themeToggle" class="btn nav-link">Toggle Theme</button>
             </div>
         </nav>
     </header>
 
-    <div class="container">
+    <div id="main-content" class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top sticky-bottom footer text-muted">
+    <footer id="main-footer" class="border-top sticky-bottom footer text-muted">
         <div class="container">
             <h6 class="footer-text">&copy; 2024 - Devblog/Portfolio</h6>
         </div>
@@ -47,35 +48,55 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+    document.getElementById('themeToggle').addEventListener('click', function () {
+        const bodyElement = document.body;
+        const currentTheme = bodyElement.getAttribute('data-bs-theme');
+
+        if (currentTheme === 'light') {
+            bodyElement.setAttribute('data-bs-theme', 'dark');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            bodyElement.setAttribute('data-bs-theme', 'light');
+            localStorage.setItem('theme', 'light');
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.body.setAttribute('data-bs-theme', savedTheme);
+    });
+</script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
 
 <style>
-    .navbar {
-        background-color: #7A7A7A;
-        margin-bottom: 20px;
-    }
+    #main-header .navbar {
+    background-color: #7A7A7A !important;
+    margin-bottom: 20px !important;
+}
 
-    .nav-link {
-        background-color: #2C5218;
-        color: #ffffff;
-        text-align: center;
-        font-size: 18px;
-        border: 1px solid black;
-        border-radius: 8px;
-        margin-left: 10px;
-        margin-right: 10px;
-    }
+    #main-header .nav-link {
+    background-color: #2C5218 !important;
+    color: #ffffff !important;
+    text-align: center;
+    font-size: 18px !important;
+    border: 1px solid black !important;
+    border-radius: 8px !important;
+    margin-left: 10px !important;
+    margin-right: 10px !important;
+}
 
-    .footer {
-        background-color: #7A7A7A;
-        margin-top: 20px;
-    }
+    #main-footer.footer {
+    background-color: #7A7A7A !important;
+    margin-top: 20px !important;
+}
 
-    .footer-text {
-        padding: 10px;
-        color: #ffffff;
-    }
+    #main-footer .footer-text {
+    padding: 10px !important;
+    color: #ffffff !important;
+}
+
 </style>

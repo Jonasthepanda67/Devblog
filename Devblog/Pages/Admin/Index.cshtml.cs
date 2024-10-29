@@ -51,9 +51,9 @@ namespace Devblog.Pages.Admin
         public IActionResult OnPostSoftDeleteAsync(Guid id)
         {
             // Soft delete the post by its ID
-            _blogView.SoftDeletePost(id); // Soft delete the post by its ID
+            _blogView.SoftDeletePost(id);
 
-            return RedirectToPage(); // Redirect back to the index page
+            return RedirectToPage();
         }
 
         public IActionResult OnPostRestore(Guid id)

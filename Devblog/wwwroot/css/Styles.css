@@ -57,9 +57,9 @@
 
 .text-decoration-line-through {
     text-decoration: line-through;
-    color: gray; /* This can be adjusted based on your design */
+    color: gray;
 }
 
 .soft-deleted {
-    opacity: 0.5; /* Adjust opacity to indicate soft-deleted status */
+    opacity: 0.5;
 }
