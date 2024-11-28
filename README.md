@@ -8,7 +8,7 @@
 - [📜 Changelog](https://github.com/Jonasthepanda67/Devblog?tab=readme-ov-file#-changelog)
  
 ## 📝 Description
-Welcome to my **Devblog** project. This is a school project that i have worked on and plan on using in the future for all my projects. I plan on adding more and more features until its finish and at that point i will be using it for storing all my projects, reviews and updates.
+Welcome to my **Devblog** project. This is a school project that i have worked on and plan on using in the future for all my projects. I plan on adding more and more features until its finished and at that point i will be using it for storing all my projects, reviews and updates.
  
 ## 💻 Features
 - **3 Different types of Posts**: Choose from 3 types of posts: Blogpost, Review or a Project post.
